@@ -37,6 +37,11 @@ public class PlayingGrid_v1 {
 	public PlayingGrid_v1() {
 		playingGrid = new ColoredDisc[ROWS][COLUMNS];
 		freeSpaces = ROWS*COLUMNS;
+		for(int i = 0; i<ROWS; i++) {
+			for(int j = 0; j<COLUMNS; j++) {
+				playingGrid[i][j] = null;
+			}
+		}
 	}
 	
 	/**
@@ -57,13 +62,12 @@ public class PlayingGrid_v1 {
 	}
 	
 	/**
-	 * This method checks if a column of the playing grid has been completely occupied.
-	 * Note that the rowIndex will be the row in which a ColoredDisc will be placed
-	 * @param rowIndex The index of the row in which it has just been placed a Disc by a player
-	 * @return The result of the check: true if the column still has at least a free space, false otherwise.
+	 * 
+	 * @param columnIndex
+	 * @return
 	 */
-	public boolean hasColumnAFreeSpace(int rowIndex) {
-		if(rowIndex != 0) return true;
+	public boolean isAValidMove(int columnIndex) {
+		if(playingGrid[0][columnIndex] == null) return true;
 		else return false;
 	}
 	
