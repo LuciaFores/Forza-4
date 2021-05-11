@@ -7,7 +7,7 @@ package gameComponents;
  * @author lucia
  *
  */
-public class PlayingGrid {
+public class PlayingGrid_v1 {
 	// Instance Variables
 	
 	/* The grid can only be a seven-columns, six-rows grid so both the number of rows and the number of columns
@@ -19,7 +19,7 @@ public class PlayingGrid {
 	/* The playing grid will be a grid of Disc objects (each cell will contain a colored disc) so it's modeled
 	 * as a bidimensional array (a matrix) of Disc objects 
 	 */
-	private Disc[][] playingGrid;
+	private ColoredDisc[][] playingGrid;
 	
 	/* During a game a playing grid will have some cells occupied while others are still free; due to the necessity
 	 * of checking if the grid still has at least a free space (if it's all occupied it's game over) this
@@ -32,10 +32,10 @@ public class PlayingGrid {
 	
 	/**
 	 * The class constructor: it creates a new playing grid for a new game; the playing grid as soon as it's
-	 * created it's just a grid of Disc objects completely empty.
+	 * created it's just a grid of ColoredDisc objects completely empty.
 	 */
-	public PlayingGrid() {
-		playingGrid = new Disc[ROWS][COLUMNS];
+	public PlayingGrid_v1() {
+		playingGrid = new ColoredDisc[ROWS][COLUMNS];
 		freeSpaces = ROWS*COLUMNS;
 	}
 	
@@ -58,7 +58,7 @@ public class PlayingGrid {
 	
 	/**
 	 * This method checks if a column of the playing grid has been completely occupied.
-	 * Note that the rowIndex will be the row in which a Disc will be placed
+	 * Note that the rowIndex will be the row in which a ColoredDisc will be placed
 	 * @param rowIndex The index of the row in which it has just been placed a Disc by a player
 	 * @return The result of the check: true if the column still has at least a free space, false otherwise.
 	 */
@@ -66,4 +66,5 @@ public class PlayingGrid {
 		if(rowIndex != 0) return true;
 		else return false;
 	}
+	
 }
