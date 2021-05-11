@@ -7,7 +7,7 @@ package gameComponents;
  * @author lucia
  *
  */
-public class PlayingGrid_v2 {
+public class PlayingGrid_v2_Discarded {
 	// Instance Variables
 	
 	/* 
@@ -43,7 +43,7 @@ public class PlayingGrid_v2 {
 	 * The class constructor: it creates a new playing grid for a new game; the playing grid as soon as it's
 	 * created it's just a grid of ColoredDisc objects completely empty.
 	 */
-	public PlayingGrid_v2() {
+	public PlayingGrid_v2_Discarded() {
 		playingGrid = new String[ROWS][COLUMNS];
 		freeSpaces = ROWS*COLUMNS;
 		for(int i = 0; i<ROWS; i++) {

@@ -10,18 +10,21 @@ package gameComponents;
 public class PlayingGrid_v1 {
 	// Instance Variables
 	
-	/* The grid can only be a seven-columns, six-rows grid so both the number of rows and the number of columns
+	/* 
+	 * The grid can only be a seven-columns, six-rows grid so both the number of rows and the number of columns
 	 * are final.
 	 */
 	final int ROWS = 6;
 	final int COLUMNS = 7;
 	
-	/* The playing grid will be a grid of Disc objects (each cell will contain a colored disc) so it's modeled
-	 * as a bidimensional array (a matrix) of Disc objects 
+	/* 
+	 * The playing grid will be a grid of Disc objects (each cell will contain a colored disc) so it's modeled
+	 * as a bidimensional array (a matrix) of ColoredDisc objects 
 	 */
 	private ColoredDisc[][] playingGrid;
 	
-	/* During a game a playing grid will have some cells occupied while others are still free; due to the necessity
+	/* 
+	 * During a game a playing grid will have some cells occupied while others are still free; due to the necessity
 	 * of checking if the grid still has at least a free space (if it's all occupied it's game over) this
 	 * variable takes account of the free spaces still available in the playing grid
 	 */
