@@ -65,9 +65,10 @@ public class PlayingGrid_v1 {
 	}
 	
 	/**
-	 * 
-	 * @param columnIndex
-	 * @return
+	 * This method checks if the move that has just been played is a valid move: a move is valid if the column
+	 * in which the player wants to put the colored disc has at least a free space
+	 * @param columnIndex The index of the column in which the player wants to put the colored disc
+	 * @return The outcome of the check: true if the column has at least a free space, false otherwise
 	 */
 	public boolean isAValidMove(int columnIndex) {
 		if(playingGrid[0][columnIndex] == null) return true;
