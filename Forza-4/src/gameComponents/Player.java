@@ -99,6 +99,8 @@ public class Player {
 		else if(otherPlayer.getPlayerNumber() == 2) playerNumber = 1;
 	}
 	
+	// FAI UPDATE DELLA JAVADOC DEI DUE METODI SEGUENTI
+	
 	/**
 	 * This method let the player choose the color red as the color for it's colored discs: if both players still
 	 * have to decide the color for their discs or the other player chose yellow, the calling player can choose
@@ -106,12 +108,14 @@ public class Player {
 	 * @param otherPlayer The other player of the game
 	 */
 	public void iAmRed(Player otherPlayer) {
-		if(otherPlayer.getPlayerColor().equals("") || otherPlayer.getPlayerColor().equals("yellow")) {
-			playerColor = "red";
-			otherPlayer.iAmYellow(this);
+		if(otherPlayer.getPlayerColor().equals("")) {
+			this.playerColor = "red";
+			otherPlayer.playerColor = "yellow";
 		}
-		else System.out.println("There's already a player with red discs");
+		else if(otherPlayer.getPlayerColor().equals("red"))
+			System.out.println("There's already a player with red discs");
 		// this will turn into an exception as soon as I will understand how to make them
+		else System.out.println("Colors have been already decided");
 	}
 	
 	/**
@@ -121,11 +125,13 @@ public class Player {
 	 * @param otherPlayer The other player of the game
 	 */
 	public void iAmYellow(Player otherPlayer) {
-		if(otherPlayer.getPlayerColor().equals("") || otherPlayer.getPlayerColor().equals("red")) {
-			playerColor = "yellow";
-			otherPlayer.iAmRed(this);
+		if(otherPlayer.getPlayerColor().equals("")) {
+			this.playerColor = "yellow";
+			otherPlayer.playerColor = "red";
 		}
-		else System.out.println("There's already a player with yellow discs");
+		else if(otherPlayer.getPlayerColor().equals("yellow"))
+			System.out.println("There's already a player with yellow discs");
 		// this will turn into an exception as soon as I will understand how to make them
+		else System.out.println("Colors have been already decided");
 	}
 }
