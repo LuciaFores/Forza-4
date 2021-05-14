@@ -106,8 +106,10 @@ public class Player {
 	 * @param otherPlayer The other player of the game
 	 */
 	public void iAmRed(Player otherPlayer) {
-		if(otherPlayer.getPlayerColor().equals("") || otherPlayer.getPlayerColor().equals("yellow"))
+		if(otherPlayer.getPlayerColor().equals("") || otherPlayer.getPlayerColor().equals("yellow")) {
 			playerColor = "red";
+			otherPlayer.iAmYellow(this);
+		}
 		else System.out.println("There's already a player with red discs");
 		// this will turn into an exception as soon as I will understand how to make them
 	}
@@ -119,8 +121,10 @@ public class Player {
 	 * @param otherPlayer The other player of the game
 	 */
 	public void iAmYellow(Player otherPlayer) {
-		if(otherPlayer.getPlayerColor().equals("") || otherPlayer.getPlayerColor().equals("red"))
+		if(otherPlayer.getPlayerColor().equals("") || otherPlayer.getPlayerColor().equals("red")) {
 			playerColor = "yellow";
+			otherPlayer.iAmRed(this);
+		}
 		else System.out.println("There's already a player with yellow discs");
 		// this will turn into an exception as soon as I will understand how to make them
 	}
