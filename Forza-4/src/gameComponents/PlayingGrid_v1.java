@@ -60,7 +60,7 @@ public class PlayingGrid_v1 {
 	 * This method is used whenever a valid move is made by a player: in fact, if a move is valid a cell in the
 	 * playing grid will be occupied and so there will be one free space less left in the playing grid
 	 */
-	public void UpdateGrid() {
+	public void updateGrid() {
 		freeSpaces -= 1;
 	}
 	
@@ -70,9 +70,26 @@ public class PlayingGrid_v1 {
 	 * @param columnIndex The index of the column in which the player wants to put the colored disc
 	 * @return The outcome of the check: true if the column has at least a free space, false otherwise
 	 */
-	public boolean isAValidMove(int columnIndex) {
-		if(playingGrid[0][columnIndex] == null) return true;
+	public boolean isAValidMove(int rowIndex, int columnIndex) {
+		if(playingGrid[rowIndex][columnIndex] == null) return true;
 		else return false;
 	}
+	
+	
+	/**
+	 * This methods is used to add a colored disc into the playing grid; at the beginning the methods checks if the
+	 * move is valid through a call to the isAValidMove method: if the move is valid then the method add the disc into the 
+	 * specified position and then update the number of free spaces in the grid through a call to the updateGrid method; if
+	 * the move is not valid it calls an exception
+	 * @param disc The colored disc to be added into the playing grid
+	 */
+	public void addColoredDisc(ColoredDisc disc) {
+		if(isAValidMove(disc.getRow(), disc.getColumn())) {
+			playingGrid[disc.getRow()][disc.getColumn()] = disc;
+			updateGrid();
+		}
+		else System.out.println("Space already occupied");
+	}
+	
 	
 }
