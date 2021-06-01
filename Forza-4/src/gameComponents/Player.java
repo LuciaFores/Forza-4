@@ -2,6 +2,9 @@ package gameComponents;
 
 import java.util.Random;
 
+/* RIGUARDA LA JAVADOC DI TUTTO */
+/* CREA UN METODO CHE CONTROLLA SE SI STA PROVANDO A CREARE PIU' DI DUE GIOCATORI */
+
 /**
  * This class models a player of Connect Four.
  * The player will be recognized during the game thanks to a nickname that they can choose before starting the game.
@@ -79,7 +82,7 @@ public class Player {
 	 * position in the order of the game, the order of the calling player is assigned consequently
 	 * @param otherPlayer The other player of the game
 	 */
-	public void setPlayerNumber(Player otherPlayer) {
+	public void setPlayerNumbers(Player otherPlayer) {
 		/*
 		 * This method is made by two part.
 		 * The first one is the part of the method that is executed when both players still not have a number
@@ -88,18 +91,28 @@ public class Player {
 		 */
 		if(otherPlayer.getPlayerNumber() == 0) {
 			Random rand = new Random();
-			if(rand.nextInt(2) == 0) playerNumber = 1;
-			else playerNumber = 2;
+			if(rand.nextInt(2) == 0) {
+				playerNumber = 1;
+				otherPlayer.setPlayerNumber(2);
+			}
+			else{
+				playerNumber = 2;
+				otherPlayer.setPlayerNumber(1);
+			}
 		}
 		/*
-		 * The second one is executed if one player already has an order in the game: in this part of the method
-		 * the playerNumber is assigned consequently to the number that has been already assigned
+		 * The second one is executed if one player already has an order in the game: an exception occurs
 		 */
-		else if(otherPlayer.getPlayerNumber() == 1) playerNumber = 2;
-		else if(otherPlayer.getPlayerNumber() == 2) playerNumber = 1;
+		else {
+			System.out.println("The order has already been decided");
+		}
 	}
 	
-	// FAI UPDATE DELLA JAVADOC DEI DUE METODI SEGUENTI
+	public void setPlayerNumber(int assignedNumber) {
+		playerNumber = assignedNumber;
+	}
+	
+	// FAI UPDATE DELLA JAVADOC DEI TRE METODI SEGUENTI
 	
 	/**
 	 * This method let the player choose the color red as the color for it's colored discs: if both players still
@@ -108,14 +121,18 @@ public class Player {
 	 * @param otherPlayer The other player of the game
 	 */
 	public void iAmRed(Player otherPlayer) {
-		if(otherPlayer.getPlayerColor().equals("")) {
-			this.playerColor = "red";
-			otherPlayer.playerColor = "yellow";
+		if(playerNumber != 1) System.out.println(playerName + ", you can't choose, you are the player number two");
+		
+		else {
+			if(otherPlayer.getPlayerColor().equals("")) {
+				this.playerColor = "red";
+				otherPlayer.setPlayerColor("yellow");
+			}
+			else if(otherPlayer.getPlayerColor().equals("red"))
+				System.out.println("There's already a player with red discs");
+			// this will turn into an exception as soon as I will understand how to make them
+			else System.out.println("Colors have been already decided");
 		}
-		else if(otherPlayer.getPlayerColor().equals("red"))
-			System.out.println("There's already a player with red discs");
-		// this will turn into an exception as soon as I will understand how to make them
-		else System.out.println("Colors have been already decided");
 	}
 	
 	/**
@@ -125,13 +142,23 @@ public class Player {
 	 * @param otherPlayer The other player of the game
 	 */
 	public void iAmYellow(Player otherPlayer) {
-		if(otherPlayer.getPlayerColor().equals("")) {
-			this.playerColor = "yellow";
-			otherPlayer.playerColor = "red";
+		if(playerNumber != 1) System.out.println(playerName + ", you can't choose, you are the player number two");
+		
+		else {
+			if(otherPlayer.getPlayerColor().equals("")) {
+				this.playerColor = "yellow";
+				otherPlayer.setPlayerColor("red");
+			}
+			else if(otherPlayer.getPlayerColor().equals("yellow"))
+				System.out.println("There's already a player with yellow discs");
+			// this will turn into an exception as soon as I will understand how to make them
+			else System.out.println("Colors have been already decided");
 		}
-		else if(otherPlayer.getPlayerColor().equals("yellow"))
-			System.out.println("There's already a player with yellow discs");
-		// this will turn into an exception as soon as I will understand how to make them
-		else System.out.println("Colors have been already decided");
+		
+	}
+	
+	
+	public void setPlayerColor(String color) {
+		playerColor = color;
 	}
 }
