@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * @author lucia
  *
  */
-public class PlayingGrid_v1 {
+public class PlayingGrid {
 	// Instance Variables
 	
 	/* 
@@ -38,7 +38,7 @@ public class PlayingGrid_v1 {
 	 * The class constructor: it creates a new playing grid for a new game; the playing grid as soon as it's
 	 * created it's just a grid of ColoredDisc objects completely empty.
 	 */
-	public PlayingGrid_v1() {
+	public PlayingGrid() {
 		playingGrid = new ColoredDisc[ROWS][COLUMNS];
 		freeSpaces = ROWS*COLUMNS;
 		for(int i = 0; i<ROWS; i++) {
@@ -78,17 +78,29 @@ public class PlayingGrid_v1 {
 	
 	
 	/**
+	 * AGGIORNA
 	 * This methods is used to add a colored disc into the playing grid; at the beginning the methods checks if the
 	 * move is valid through a call to the isAValidMove method: if the move is valid then the method add the disc into the 
 	 * specified position and then update the number of free spaces in the grid through a call to the updateGrid method; if
 	 * the move is not valid it calls an exception
 	 * @param disc The colored disc to be added into the playing grid
 	 */
-	//RIVEDI CHE CI SONO PROBLEMI PRATICAMENTE DEVI AGGIUNGERE UN CONTROLLO PER VEDERE CHE LA PEDINA VENGA
-	//INSERITA NELLA CELLA GIUSTA OSSIA CHE SE SOTTO NON CI STA UNA PEDINA ALLORA SCENDE SE NO SI FERMA ALLA
-	//CELLA INDICATA
 	public void addColoredDisc(ColoredDisc disc) {
 		if(isAValidMove(disc.getRow(), disc.getColumn())) {
+			/*if(disc.getRow() < ROWS) {
+				if(playingGrid[disc.getRow()+1][disc.getColumn()] == null) {
+					disc.setMove(disc.getRow()+1, disc.getColumn());
+					addColoredDisc(disc);
+				}
+				else {
+					playingGrid[disc.getRow()][disc.getColumn()] = disc;
+					updateGrid();
+				}
+			}
+			else {
+				playingGrid[disc.getRow()][disc.getColumn()] = disc;
+				updateGrid();
+			}*/
 			playingGrid[disc.getRow()][disc.getColumn()] = disc;
 			updateGrid();
 		}
@@ -146,6 +158,8 @@ public class PlayingGrid_v1 {
 	
 	/*
 	 * AGGIUNGI JAVADOC
+	 * CREA UNA FUNZIONE ARETHEREFOURALIGNED CHE VEDE PRIMA SE CI SONO QUATTRO PEDINE ALLINEATE E POI NE
+	 * CONTROLLA IL COLORE SE NO NON FA NEANCHE I CONTROLLI
 	 */
 	public boolean isTheWinningMove(int rowIndex, int columnIndex) {
 		boolean win = false;
@@ -157,15 +171,18 @@ public class PlayingGrid_v1 {
 		 */
 		if(rowIndex < 3) {
 			for(int i = 0; i < 4; i++) {
-				if(playingGrid[rowIndex + i][columnIndex].getDiscColor()
-						.equals(playingGrid[rowIndex][columnIndex].getDiscColor()))
-					win = true;
-				else 
-					win = false;
+				if(playingGrid[rowIndex + 1][columnIndex] != null) {
+					if(playingGrid[rowIndex + i][columnIndex].getDiscColor()
+							.equals(playingGrid[rowIndex][columnIndex].getDiscColor()))
+						win = true;
+					else 
+						win = false;
+				}
 			}
 		}
-		if (win)
+		if(win) {
 			return true;
+		}
 		
 		/*
 		 * Horizontal win; this type of win can be achieved if we have colored discs aligned to the right
@@ -174,28 +191,34 @@ public class PlayingGrid_v1 {
 		// Right aligned colored discs
 		if(columnIndex < 4) {
 			for(int i = 0; i < 4; i++) {
-				if(playingGrid[rowIndex][columnIndex + i].getDiscColor()
-						.equals(playingGrid[rowIndex][columnIndex].getDiscColor()))
-					win = true;
-				else
-					win = false;
+				if(playingGrid[rowIndex][columnIndex + 1] != null) {
+					if(playingGrid[rowIndex][columnIndex + i].getDiscColor()
+							.equals(playingGrid[rowIndex][columnIndex].getDiscColor()))
+						win = true;
+					else
+						win = false;
+				}
 			}
 		}
-		if (win)
+		if(win) {
 			return true;
+		}
 		
 		// Left aligned colored discs
 		if(columnIndex >= 3) {
 			for(int i = 0; i < 4; i++) {
-				if(playingGrid[rowIndex][columnIndex - i].getDiscColor()
-						.equals(playingGrid[rowIndex][columnIndex].getDiscColor()))
-					win = true;
-				else
-					win = false;
+				if(playingGrid[rowIndex][columnIndex - 1] != null) {
+					if(playingGrid[rowIndex][columnIndex - i].getDiscColor()
+							.equals(playingGrid[rowIndex][columnIndex].getDiscColor()))
+						win = true;
+					else
+						win = false;
+				}
 			}
 		}
-		if(win)
+		if(win) {
 			return true;
+		}
 		
 		/*
 		 *  Diagonal aligned colored discs: there are two diagonal passing through the point in which the
@@ -212,18 +235,21 @@ public class PlayingGrid_v1 {
 		
 		// Here we want to check if there are at least four elements in the left diagonal: if it has then 
 		// we will check if there are four aligned colored disc
-		if(leftDiagonal.size()/2 >= 4) {
+		/*if(leftDiagonal.size()/2 >= 4) {
 			for(int i = 0; i < leftDiagonal.size(); i = i+2) {
 				int row = leftDiagonal.get(i);
 				int col = leftDiagonal.get(i+1);
-				if(playingGrid[row][col].getDiscColor()
-						.equals(playingGrid[rowIndex][columnIndex].getDiscColor()))
-					win = true;
-				else
-					win = false;
+				if(playingGrid[row][col] != null) {
+					if(playingGrid[row][col].getDiscColor()
+							.equals(playingGrid[rowIndex][columnIndex].getDiscColor()))
+						win = true;
+					else
+						win = false;
+				}
 			}
-			if(win)
+			if(win) {
 				return true;
+			}
 		}
 		
 		// Here we want to check if there are at least four elements in the right diagonal: if it has then 
@@ -232,15 +258,18 @@ public class PlayingGrid_v1 {
 			for(int i = 0; i < rightDiagonal.size(); i = i+2) {
 				int row = rightDiagonal.get(i);
 				int col = rightDiagonal.get(i+1);
-				if(playingGrid[row][col].getDiscColor()
-						.equals(playingGrid[rowIndex][columnIndex].getDiscColor()))
-					win = true;
-				else
-					win = false;
+				if(playingGrid[row][col] != null) {
+					if(playingGrid[row][col].getDiscColor()
+							.equals(playingGrid[rowIndex][columnIndex].getDiscColor()))
+						win = true;
+					else
+						win = false;
+				}
 			}
-			if(win)
+			if(win) {
 				return true;
-		}
+			}
+		}*/
 		
 		//If we don't have four aligned colored disc in any of the configuration above then the move played
 		// is not the winning move
@@ -257,5 +286,35 @@ public class PlayingGrid_v1 {
 			return false;
 	}
 	
+	
+	
+	public void playingGridPrinter() {
+		System.out.println("    - - - - - - -");
+		int c = 0;
+		for(int i = 0; i < ROWS; i++) {
+			for(int j = 0; j < COLUMNS; j++) {
+				if(j == 0) {
+					System.out.print(c + "  |");
+					c++;
+				}
+				if(playingGrid[i][j] == null)
+				System.out.print(" |");
+				else {
+					if(playingGrid[i][j].getDiscColor().equals("red"))
+						System.out.print("O|");
+					else if(playingGrid[i][j].getDiscColor().equals("yellow"))
+						System.out.print("X|");
+				}
+			}
+			System.out.println();
+			if(i == ROWS-1) {
+				System.out.println("    - - - - - - -");
+				System.out.println("    0 1 2 3 4 5 6");
+			}
+			else
+				System.out.println("    - - - - - - -");
+		}
+		
+	}
 	
 }

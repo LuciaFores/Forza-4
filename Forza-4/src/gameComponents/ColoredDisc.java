@@ -69,7 +69,7 @@ public class ColoredDisc {
 	 * @return The outcome of the check: true if the point in which the disc has been put is legal, false otherwise
 	 */
 	public boolean isALegalPoint(int rowIndex, int columnIndex) {
-		if((rowIndex >= 0 && rowIndex <= 5) && (columnIndex >= 0 && columnIndex <= 5)) return true;
+		if((rowIndex >= 0 && rowIndex <= 5) && (columnIndex >= 0 && columnIndex <= 6)) return true;
 		else return false;
 	}
 	
@@ -79,7 +79,7 @@ public class ColoredDisc {
 	 * the row index to the index given in the parameters and the column index given in the parameters, otherwise the method
 	 * launch an exception
 	 * @param rowMove The index of the row in which the player wants to put the colored disc
-	 * @param columnMove The index of the column in which the player wants to put the colored disc
+	 * @param columnMove The index of the column in which the player wants to put the colored dis pèc
 	 */
 	public void setMove(int rowMove, int columnMove) {
 		if(isALegalPoint(rowMove, columnMove)) {
