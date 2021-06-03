@@ -84,6 +84,9 @@ public class PlayingGrid_v1 {
 	 * the move is not valid it calls an exception
 	 * @param disc The colored disc to be added into the playing grid
 	 */
+	//RIVEDI CHE CI SONO PROBLEMI PRATICAMENTE DEVI AGGIUNGERE UN CONTROLLO PER VEDERE CHE LA PEDINA VENGA
+	//INSERITA NELLA CELLA GIUSTA OSSIA CHE SE SOTTO NON CI STA UNA PEDINA ALLORA SCENDE SE NO SI FERMA ALLA
+	//CELLA INDICATA
 	public void addColoredDisc(ColoredDisc disc) {
 		if(isAValidMove(disc.getRow(), disc.getColumn())) {
 			playingGrid[disc.getRow()][disc.getColumn()] = disc;
@@ -93,12 +96,61 @@ public class PlayingGrid_v1 {
 	}
 	
 	
+	// AGGIUNGI JAVADOC
+		public ArrayList<ArrayList<Integer>> getPlayingGridDiagonals(int rowIndex, int columnIndex) {
+			ArrayList<Integer> leftDiagonal = new ArrayList<Integer>();
+			ArrayList<Integer> rightDiagonal = new ArrayList<Integer>();
+			
+			for(int i = 0; i < ROWS; i++) {
+				if(i < rowIndex) {
+					int j = columnIndex - Math.abs(rowIndex - i);
+					if(j >= 0) {
+						leftDiagonal.add(i);
+						leftDiagonal.add(j);
+					}
+					j = columnIndex + Math.abs(rowIndex - i);
+					if(j < COLUMNS) {
+						rightDiagonal.add(i);
+						rightDiagonal.add(j);
+					}
+				}
+				else if(i > rowIndex) {
+					int j = columnIndex - Math.abs(rowIndex - i);
+					if(j >= 0) {
+						rightDiagonal.add(i);
+						rightDiagonal.add(j);
+					}
+					j = columnIndex + Math.abs(rowIndex - 1);
+					if(j < COLUMNS) {
+						leftDiagonal.add(i);
+						leftDiagonal.add(j);
+					}
+				}
+				else {
+					int j = columnIndex;
+					leftDiagonal.add(i);
+					leftDiagonal.add(j);
+					rightDiagonal.add(i);
+					rightDiagonal.add(j);
+				}
+			}
+			
+			ArrayList<ArrayList<Integer>> diagonals = new ArrayList<ArrayList<Integer>>();
+			
+			diagonals.add(leftDiagonal);
+			diagonals.add(rightDiagonal);
+			
+			return diagonals;
+		}
+	
+	
 	/*
 	 * AGGIUNGI JAVADOC
 	 */
 	public boolean isTheWinningMove(int rowIndex, int columnIndex) {
 		boolean win = false;
 		// Winning conditions has to be checked
+		
 		/* 
 		 * Vertical win; it can only be applied to row 0, 1, 2 because these are the only rows that 
 		 * makes possible to have four colored discs stacked
@@ -145,57 +197,65 @@ public class PlayingGrid_v1 {
 		if(win)
 			return true;
 		
+		/*
+		 *  Diagonal aligned colored discs: there are two diagonal passing through the point in which the
+		 *  last colored disc has been inserted.
+		 *  We will use a method to find the two diagonals and then we compute the checks to see if there are
+		 *  four colored discs aligned
+		 */
 		
+		// Finding the diagonals
+		ArrayList<ArrayList<Integer>> diagonals = getPlayingGridDiagonals(rowIndex, columnIndex);
 		
+		ArrayList<Integer> leftDiagonal = diagonals.get(0);
+		ArrayList<Integer> rightDiagonal = diagonals.get(1);
 		
+		// Here we want to check if there are at least four elements in the left diagonal: if it has then 
+		// we will check if there are four aligned colored disc
+		if(leftDiagonal.size()/2 >= 4) {
+			for(int i = 0; i < leftDiagonal.size(); i = i+2) {
+				int row = leftDiagonal.get(i);
+				int col = leftDiagonal.get(i+1);
+				if(playingGrid[row][col].getDiscColor()
+						.equals(playingGrid[rowIndex][columnIndex].getDiscColor()))
+					win = true;
+				else
+					win = false;
+			}
+			if(win)
+				return true;
+		}
+		
+		// Here we want to check if there are at least four elements in the right diagonal: if it has then 
+		// we will check if there are four aligned colored disc
+		if(rightDiagonal.size()/2 >= 4) {
+			for(int i = 0; i < rightDiagonal.size(); i = i+2) {
+				int row = rightDiagonal.get(i);
+				int col = rightDiagonal.get(i+1);
+				if(playingGrid[row][col].getDiscColor()
+						.equals(playingGrid[rowIndex][columnIndex].getDiscColor()))
+					win = true;
+				else
+					win = false;
+			}
+			if(win)
+				return true;
+		}
+		
+		//If we don't have four aligned colored disc in any of the configuration above then the move played
+		// is not the winning move
 		return false;
 	}
 	
 	
-	// AGGIUNGI JAVADOC
-	public ArrayList<ArrayList<Integer>> getPlayingGridDiagonals(int rowIndex, int columnIndex) {
-		ArrayList<Integer> leftDiagonal = new ArrayList<Integer>();
-		ArrayList<Integer> rightDiagonal = new ArrayList<Integer>();
-		
-		for(int i = 0; i < ROWS; i++) {
-			if(i < rowIndex) {
-				int j = columnIndex - Math.abs(rowIndex - i);
-				if(j >= 0) {
-					leftDiagonal.add(i);
-					leftDiagonal.add(j);
-				}
-				j = columnIndex + Math.abs(rowIndex - i);
-				if(j < COLUMNS) {
-					rightDiagonal.add(i);
-					rightDiagonal.add(j);
-				}
-			}
-			else if(i > rowIndex) {
-				int j = columnIndex - Math.abs(rowIndex - i);
-				if(j >= 0) {
-					rightDiagonal.add(i);
-					rightDiagonal.add(j);
-				}
-				j = columnIndex + Math.abs(rowIndex - 1);
-				if(j < COLUMNS) {
-					leftDiagonal.add(i);
-					leftDiagonal.add(j);
-				}
-			}
-			else {
-				int j = columnIndex;
-				leftDiagonal.add(i);
-				leftDiagonal.add(j);
-				rightDiagonal.add(i);
-				rightDiagonal.add(j);
-			}
-		}
-		
-		ArrayList<ArrayList<Integer>> diagonals = new ArrayList<ArrayList<Integer>>();
-		
-		diagonals.add(leftDiagonal);
-		diagonals.add(rightDiagonal);
-		
-		return diagonals;
+	// il metodo viene chiamato dopo il controllo se la mossa era vincente per controllare che non sia un pareggio
+	//AGGIUNGI JAVADOC
+	public boolean isItATie() {
+		if(freeSpaces == 0)
+			return true;
+		else
+			return false;
 	}
+	
+	
 }
