@@ -1,5 +1,6 @@
 package gameComponents;
 
+import java.util.ArrayList;
 
 /**
  * This class models a playing grid for Connect Four.
@@ -92,4 +93,109 @@ public class PlayingGrid_v1 {
 	}
 	
 	
+	/*
+	 * AGGIUNGI JAVADOC
+	 */
+	public boolean isTheWinningMove(int rowIndex, int columnIndex) {
+		boolean win = false;
+		// Winning conditions has to be checked
+		/* 
+		 * Vertical win; it can only be applied to row 0, 1, 2 because these are the only rows that 
+		 * makes possible to have four colored discs stacked
+		 */
+		if(rowIndex < 3) {
+			for(int i = 0; i < 4; i++) {
+				if(playingGrid[rowIndex + i][columnIndex].getDiscColor()
+						.equals(playingGrid[rowIndex][columnIndex].getDiscColor()))
+					win = true;
+				else 
+					win = false;
+			}
+		}
+		if (win)
+			return true;
+		
+		/*
+		 * Horizontal win; this type of win can be achieved if we have colored discs aligned to the right
+		 * or to the left, so this part of the method will be split in two
+		 */
+		// Right aligned colored discs
+		if(columnIndex < 4) {
+			for(int i = 0; i < 4; i++) {
+				if(playingGrid[rowIndex][columnIndex + i].getDiscColor()
+						.equals(playingGrid[rowIndex][columnIndex].getDiscColor()))
+					win = true;
+				else
+					win = false;
+			}
+		}
+		if (win)
+			return true;
+		
+		// Left aligned colored discs
+		if(columnIndex >= 3) {
+			for(int i = 0; i < 4; i++) {
+				if(playingGrid[rowIndex][columnIndex - i].getDiscColor()
+						.equals(playingGrid[rowIndex][columnIndex].getDiscColor()))
+					win = true;
+				else
+					win = false;
+			}
+		}
+		if(win)
+			return true;
+		
+		
+		
+		
+		return false;
+	}
+	
+	
+	// AGGIUNGI JAVADOC
+	public ArrayList<ArrayList<Integer>> getPlayingGridDiagonals(int rowIndex, int columnIndex) {
+		ArrayList<Integer> leftDiagonal = new ArrayList<Integer>();
+		ArrayList<Integer> rightDiagonal = new ArrayList<Integer>();
+		
+		for(int i = 0; i < ROWS; i++) {
+			if(i < rowIndex) {
+				int j = columnIndex - Math.abs(rowIndex - i);
+				if(j >= 0) {
+					leftDiagonal.add(i);
+					leftDiagonal.add(j);
+				}
+				j = columnIndex + Math.abs(rowIndex - i);
+				if(j < COLUMNS) {
+					rightDiagonal.add(i);
+					rightDiagonal.add(j);
+				}
+			}
+			else if(i > rowIndex) {
+				int j = columnIndex - Math.abs(rowIndex - i);
+				if(j >= 0) {
+					rightDiagonal.add(i);
+					rightDiagonal.add(j);
+				}
+				j = columnIndex + Math.abs(rowIndex - 1);
+				if(j < COLUMNS) {
+					leftDiagonal.add(i);
+					leftDiagonal.add(j);
+				}
+			}
+			else {
+				int j = columnIndex;
+				leftDiagonal.add(i);
+				leftDiagonal.add(j);
+				rightDiagonal.add(i);
+				rightDiagonal.add(j);
+			}
+		}
+		
+		ArrayList<ArrayList<Integer>> diagonals = new ArrayList<ArrayList<Integer>>();
+		
+		diagonals.add(leftDiagonal);
+		diagonals.add(rightDiagonal);
+		
+		return diagonals;
+	}
 }
