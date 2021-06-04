@@ -85,26 +85,23 @@ public class PlayingGrid {
 	 * the move is not valid it calls an exception
 	 * @param disc The colored disc to be added into the playing grid
 	 */
-	public void addColoredDisc(ColoredDisc disc) {
-		if(isAValidMove(disc.getRow(), disc.getColumn())) {
-			/*if(disc.getRow() < ROWS) {
-				if(playingGrid[disc.getRow()+1][disc.getColumn()] == null) {
-					disc.setMove(disc.getRow()+1, disc.getColumn());
-					addColoredDisc(disc);
-				}
-				else {
-					playingGrid[disc.getRow()][disc.getColumn()] = disc;
-					updateGrid();
+	public boolean addColoredDisc(ColoredDisc disc) {
+		// at first we need to find the row in which we will put the disc
+		boolean added = false;
+		int row = 0;
+		if(playingGrid[row][disc.getColumn()] == null) {
+			for(int i = 0; i < ROWS; i++) {
+				if(playingGrid[i][disc.getColumn()] == null) {
+					row = Math.max(row, i);
+					disc.setRow(row);
 				}
 			}
-			else {
-				playingGrid[disc.getRow()][disc.getColumn()] = disc;
-				updateGrid();
-			}*/
-			playingGrid[disc.getRow()][disc.getColumn()] = disc;
+			playingGrid[row][disc.getColumn()] = disc;
 			updateGrid();
+			added = true;
 		}
-		else System.out.println("Space already occupied");
+		else System.out.println("Column already totally occupied");
+		return added;
 	}
 	
 	
@@ -215,7 +212,7 @@ public class PlayingGrid {
 		ArrayList<Integer> diagonallyRightAlignedTop = diagonallyRightAligned.get(1);
 		//Checks if there are bottom aligned disc
 		if(!diagonallyRightAlignedBottom.isEmpty()) {
-			for(int i = 0; i < diagonallyRightAlignedBottom.size(); i++) {
+			for(int i = 0; i < diagonallyRightAlignedBottom.size(); i = i+2) {
 				int row = diagonallyRightAlignedBottom.get(i);
 				int col = diagonallyRightAlignedBottom.get(i+1);
 				if(playingGrid[row][col].getDiscColor()

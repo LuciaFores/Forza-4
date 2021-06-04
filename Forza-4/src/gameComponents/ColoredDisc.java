@@ -68,10 +68,10 @@ public class ColoredDisc {
 	 * @param columnIndex The y-coordinate of the point in which the disc has been put
 	 * @return The outcome of the check: true if the point in which the disc has been put is legal, false otherwise
 	 */
-	public boolean isALegalPoint(int rowIndex, int columnIndex) {
+	/*public boolean isALegalPoint(int rowIndex, int columnIndex) {
 		if((rowIndex >= 0 && rowIndex <= 5) && (columnIndex >= 0 && columnIndex <= 6)) return true;
 		else return false;
-	}
+	}*/
 	
 	/**
 	 * The method is used to set the potential move that the player want to do;
@@ -81,12 +81,17 @@ public class ColoredDisc {
 	 * @param rowMove The index of the row in which the player wants to put the colored disc
 	 * @param columnMove The index of the column in which the player wants to put the colored dis pèc
 	 */
-	public void setMove(int rowMove, int columnMove) {
-		if(isALegalPoint(rowMove, columnMove)) {
-			row = rowMove;
+	public void setMove(int columnMove) {
+		if(columnMove < 7)
 			column = columnMove;
-		}
-		else System.out.println("The move is not valid");
+		else
+			System.out.println("The column doesn't exist");
+	}
+	
+	
+	
+	public void setRow(int rowIndex) {
+		row = rowIndex;
 	}
 	
 }

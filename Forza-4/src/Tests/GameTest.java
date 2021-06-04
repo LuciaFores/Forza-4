@@ -85,40 +85,38 @@ public class GameTest {
 		PlayingGrid grid = new PlayingGrid();
 		while(!grid.isItATie()) {
 			grid.playingGridPrinter();
-			// CONTROLLA E SISTEMA NON PRENDE I GIOCATORI CORRETTI
 			if(grid.getFreeSpaces() % 2 == 0) {
 				ColoredDisc activeDisc = new ColoredDisc(player1.getPlayerColor());
-				System.out.println(player1.getPlayerName() + " in which row do you want to put your disc?");
-				int rowIndex = in.nextInt();
-				System.out.println("and in which column do you want to put your disc?");
+				System.out.println(player1.getPlayerName() + " in which column do you want to put your disc?");
 				int columnIndex = in.nextInt();
-				activeDisc.setMove(rowIndex, columnIndex);
-				grid.addColoredDisc(activeDisc);
-				if(grid.isTheWinningMove(activeDisc.getRow(), activeDisc.getColumn())) {
-					System.out.println("Congratulations " + player1.getPlayerName() + " you won!");
-					grid.playingGridPrinter();
-					break;
+				activeDisc.setMove(columnIndex);
+				if(grid.addColoredDisc(activeDisc)) {
+					if(grid.isTheWinningMove(activeDisc.getRow(), activeDisc.getColumn())) {
+						System.out.println("Congratulations " + player1.getPlayerName() + " you won!");
+						grid.playingGridPrinter();
+						break;
+					}
+					else
+						grid.playingGridPrinter();
 				}
-				else
-					grid.playingGridPrinter();
 			}
 			if(grid.getFreeSpaces() % 2 == 1) {
 				ColoredDisc activeDisc = new ColoredDisc(player2.getPlayerColor());
-				System.out.println(player2.getPlayerName() + " in which row do you want to put your disc?");
-				int rowIndex = in.nextInt();
-				System.out.println("and in which column do you want to put your disc?");
+				System.out.println(player2.getPlayerName() + " in which column do you want to put your disc?");
 				int columnIndex = in.nextInt();
-				activeDisc.setMove(rowIndex, columnIndex);
-				grid.addColoredDisc(activeDisc);
-				if(grid.isTheWinningMove(activeDisc.getRow(), activeDisc.getColumn())) {
-					System.out.println("Congratulations " + player2.getPlayerName() + " you won!");
-					grid.playingGridPrinter();
-					break;
+				activeDisc.setMove(columnIndex);
+				if(grid.addColoredDisc(activeDisc)) {
+					if(grid.isTheWinningMove(activeDisc.getRow(), activeDisc.getColumn())) {
+						System.out.println("Congratulations " + player2.getPlayerName() + " you won!");
+						grid.playingGridPrinter();
+						break;
+					}
+					else
+						grid.playingGridPrinter();
 				}
-				else
-					grid.playingGridPrinter();
 			}
 		}
+		System.out.println("Sorry it's a tie");
 		
 	}
 }
