@@ -116,7 +116,5 @@ public class GameTest {
 				}
 			}
 		}
-		System.out.println("Sorry it's a tie");
-		
 	}
 }

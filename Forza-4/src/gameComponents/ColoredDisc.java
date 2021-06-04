@@ -62,24 +62,29 @@ public class ColoredDisc {
 	}
 	
 	/**
-	 * The method is used to set the potential move that the player want to do;
-	 * at first the method checks if the point of the grid in which the colored disc should be put exists: if exists sets
-	 * the row index to the index given in the parameters and the column index given in the parameters, otherwise the method
-	 * launch an exception
-	 * @param rowMove The index of the row in which the player wants to put the colored disc
-	 * @param columnMove The index of the column in which the player wants to put the colored dis pèc
+	 * This method is used to set the value of the instance variable column.
+	 * The method will also checks if the column index that should be set is a legal one.
+	 * @param columnIndex The value to give to the instance variable column.
 	 */
-	public void setColumn(int columnMove) {
-		if(columnMove < 7)
-			column = columnMove;
+	public void setColumn(int columnIndex) {
+		if(columnIndex < 7)
+			column = columnIndex;
 		else
 			System.out.println("The column doesn't exist");
 	}
 	
 	
-	//AGGIUNGI JAVADOC
+	/**
+	 * This method is used to set the value of the instance variable row.
+	 * The method will also checks if the row index that should be set is a legal one.
+	 * @param rowIndex The value to give to the instance variable row.
+	 */
 	public void setRow(int rowIndex) {
-		row = rowIndex;
+		if(rowIndex < 6) {
+			row = rowIndex;
+		}
+		else
+			System.out.println("the row doesn't exist");
 	}
 	
 }

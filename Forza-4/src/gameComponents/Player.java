@@ -2,7 +2,7 @@ package gameComponents;
 
 import java.util.Random;
 
-/* RIGUARDA LA JAVADOC DI TUTTO */
+
 /* CREA UN METODO CHE CONTROLLA SE SI STA PROVANDO A CREARE PIU' DI DUE GIOCATORI */
 
 /**
@@ -77,17 +77,15 @@ public class Player {
 	}
 	
 	/**
-	 * This method is used to randomly assign an order to players in the game: if no order is assigned when the 
-	 * method is called, the order of the calling player is randomly assigned; if a player already has a 
-	 * position in the order of the game, the order of the calling player is assigned consequently
+	 * This method is used to randomly assign an order to players in the game.
+	 * If the players try to reassign the order after it has been decided an exception occurs.
 	 * @param otherPlayer The other player of the game
 	 */
 	public void setPlayerNumbers(Player otherPlayer) {
 		/*
 		 * This method is made by two part.
 		 * The first one is the part of the method that is executed when both players still not have a number
-		 * that identifies their order in the game: in this part of the method the playerNumber is randomly
-		 * assigned to the player that has called the method
+		 * that identifies their order in the game
 		 */
 		if(otherPlayer.getPlayerNumber() == 0) {
 			Random rand = new Random();
@@ -108,16 +106,26 @@ public class Player {
 		}
 	}
 	
+	/**
+	 * This method is used to set the value of the instance variable playerNumber.
+	 * The method also checks that the value assigned to the instance variable is a legal one
+	 * @param assignedNumber The value to give to the instance variable playerNumber
+	 */
 	public void setPlayerNumber(int assignedNumber) {
-		playerNumber = assignedNumber;
+		if(assignedNumber == 1 || assignedNumber == 2) {
+			playerNumber = assignedNumber;
+		}
+		else
+			System.out.println("The value is not valid");
 	}
 	
-	// FAI UPDATE DELLA JAVADOC DEI TRE METODI SEGUENTI
 	
 	/**
-	 * This method let the player choose the color red as the color for it's colored discs: if both players still
-	 * have to decide the color for their discs or the other player chose yellow, the calling player can choose
-	 * red as its color, otherwise an exception occurs
+	 * This method let the player choose the color red as the color for it's colored discs.
+	 * The method checks if the player that called the method is the first one in the game, it checks if the 
+	 * players doesn't have already colors assigned and checks if the color hasn't already be taken by the other
+	 * player.
+	 * If the color is free the method set the value of the instance variable playerColor to the String red
 	 * @param otherPlayer The other player of the game
 	 */
 	public void iAmRed(Player otherPlayer) {
@@ -136,9 +144,11 @@ public class Player {
 	}
 	
 	/**
-	 * This method let the player choose the color yellow as the color for it's colored discs: if both players still
-	 * have to decide the color for their discs or the other player chose red, the calling player can choose yellow
-	 * as its color, otherwise an exception occurs
+	 * This method let the player choose the color red as the color for it's colored discs.
+	 * The method checks if the player that called the method is the first one in the game, it checks if the 
+	 * players doesn't have already colors assigned and checks if the color hasn't already be taken by the other
+	 * player.
+	 * If the color is free the method set the value of the instance variable playerColor to the String yellow
 	 * @param otherPlayer The other player of the game
 	 */
 	public void iAmYellow(Player otherPlayer) {
@@ -158,6 +168,11 @@ public class Player {
 	}
 	
 	
+	/**
+	 * This method is used to set the value of the instance variable playerColor.
+	 * The method also checks if the value to be set is a legal one.
+	 * @param color The value to give to the instance variable playerColor
+	 */
 	public void setPlayerColor(String color) {
 		playerColor = color;
 	}
