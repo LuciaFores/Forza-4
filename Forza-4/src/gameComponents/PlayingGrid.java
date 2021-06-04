@@ -108,54 +108,6 @@ public class PlayingGrid {
 	}
 	
 	
-	// AGGIUNGI JAVADOC
-		public ArrayList<ArrayList<Integer>> getPlayingGridDiagonals(int rowIndex, int columnIndex) {
-			ArrayList<Integer> leftDiagonal = new ArrayList<Integer>();
-			ArrayList<Integer> rightDiagonal = new ArrayList<Integer>();
-			
-			for(int i = 0; i < ROWS; i++) {
-				if(i < rowIndex) {
-					int j = columnIndex - Math.abs(rowIndex - i);
-					if(j >= 0) {
-						leftDiagonal.add(i);
-						leftDiagonal.add(j);
-					}
-					j = columnIndex + Math.abs(rowIndex - i);
-					if(j < COLUMNS) {
-						rightDiagonal.add(i);
-						rightDiagonal.add(j);
-					}
-				}
-				else if(i > rowIndex) {
-					int j = columnIndex - Math.abs(rowIndex - i);
-					if(j >= 0) {
-						rightDiagonal.add(i);
-						rightDiagonal.add(j);
-					}
-					j = columnIndex + Math.abs(rowIndex - 1);
-					if(j < COLUMNS) {
-						leftDiagonal.add(i);
-						leftDiagonal.add(j);
-					}
-				}
-				else {
-					int j = columnIndex;
-					leftDiagonal.add(i);
-					leftDiagonal.add(j);
-					rightDiagonal.add(i);
-					rightDiagonal.add(j);
-				}
-			}
-			
-			ArrayList<ArrayList<Integer>> diagonals = new ArrayList<ArrayList<Integer>>();
-			
-			diagonals.add(leftDiagonal);
-			diagonals.add(rightDiagonal);
-			
-			return diagonals;
-		}
-	
-	
 	/*
 	 * AGGIUNGI JAVADOC
 	 * CREA UNA FUNZIONE ARETHEREFOURALIGNED CHE VEDE PRIMA SE CI SONO QUATTRO PEDINE ALLINEATE E POI NE
@@ -169,19 +121,19 @@ public class PlayingGrid {
 		 * Vertical win; it can only be applied to row 0, 1, 2 because these are the only rows that 
 		 * makes possible to have four colored discs stacked
 		 */
-		if(rowIndex < 3) {
-			for(int i = 0; i < 4; i++) {
-				if(playingGrid[rowIndex + 1][columnIndex] != null) {
-					if(playingGrid[rowIndex + i][columnIndex].getDiscColor()
-							.equals(playingGrid[rowIndex][columnIndex].getDiscColor()))
-						win = true;
-					else 
-						win = false;
-				}
+		ArrayList<Integer> verticalAligned = areFourVerticalAligned(playingGrid[rowIndex][columnIndex]);
+		if(!verticalAligned.isEmpty()) {
+			for(int i = 0; i < verticalAligned.size(); i = i+2) {
+				int row = verticalAligned.get(i);
+				int col = verticalAligned.get(i+1);
+				if(playingGrid[row][col].getDiscColor()
+						.equals(playingGrid[rowIndex][columnIndex].getDiscColor()))
+					win = true;
+				else
+					win = false;
 			}
-		}
-		if(win) {
-			return true;
+			if(win)
+				return true;
 		}
 		
 		/*
@@ -189,87 +141,106 @@ public class PlayingGrid {
 		 * or to the left, so this part of the method will be split in two
 		 */
 		// Right aligned colored discs
-		if(columnIndex < 4) {
-			for(int i = 0; i < 4; i++) {
-				if(playingGrid[rowIndex][columnIndex + 1] != null) {
-					if(playingGrid[rowIndex][columnIndex + i].getDiscColor()
-							.equals(playingGrid[rowIndex][columnIndex].getDiscColor()))
-						win = true;
-					else
-						win = false;
-				}
+		ArrayList<Integer> horizontallyRightAligned = areFourHorizontallyRightAligned(playingGrid[rowIndex][columnIndex]);
+		if(!horizontallyRightAligned.isEmpty()) {
+			for(int i = 0; i < horizontallyRightAligned.size(); i = i+2) {
+				int row = horizontallyRightAligned.get(i);
+				int col = horizontallyRightAligned.get(i+1);
+				if(playingGrid[row][col].getDiscColor()
+						.equals(playingGrid[rowIndex][columnIndex].getDiscColor()))
+					win = true;
+				else
+					win = false;
 			}
-		}
-		if(win) {
-			return true;
+			if(win)
+				return true;
 		}
 		
 		// Left aligned colored discs
-		if(columnIndex >= 3) {
-			for(int i = 0; i < 4; i++) {
-				if(playingGrid[rowIndex][columnIndex - 1] != null) {
-					if(playingGrid[rowIndex][columnIndex - i].getDiscColor()
-							.equals(playingGrid[rowIndex][columnIndex].getDiscColor()))
-						win = true;
-					else
-						win = false;
-				}
+		ArrayList<Integer> horizontallyLeftAligned = areFourHorizontallyLeftAligned(playingGrid[rowIndex][columnIndex]);
+		if(!horizontallyLeftAligned.isEmpty()) {
+			for(int i = 0; i < horizontallyLeftAligned.size(); i = i+2) {
+				int row = horizontallyLeftAligned.get(i);
+				int col = horizontallyLeftAligned.get(i+1);
+				if(playingGrid[row][col].getDiscColor()
+						.equals(playingGrid[rowIndex][columnIndex].getDiscColor()))
+					win = true;
+				else
+					win = false;
 			}
-		}
-		if(win) {
-			return true;
+			if(win)
+				return true;
 		}
 		
 		/*
-		 *  Diagonal aligned colored discs: there are two diagonal passing through the point in which the
-		 *  last colored disc has been inserted.
-		 *  We will use a method to find the two diagonals and then we compute the checks to see if there are
-		 *  four colored discs aligned
+		 *  Diagonal aligned colored discs: note that there are two diagonal passing through the point in
+		 *  which the last colored disc has been inserted.
 		 */
-		
-		// Finding the diagonals
-		ArrayList<ArrayList<Integer>> diagonals = getPlayingGridDiagonals(rowIndex, columnIndex);
-		
-		ArrayList<Integer> leftDiagonal = diagonals.get(0);
-		ArrayList<Integer> rightDiagonal = diagonals.get(1);
-		
-		// Here we want to check if there are at least four elements in the left diagonal: if it has then 
-		// we will check if there are four aligned colored disc
-		/*if(leftDiagonal.size()/2 >= 4) {
-			for(int i = 0; i < leftDiagonal.size(); i = i+2) {
-				int row = leftDiagonal.get(i);
-				int col = leftDiagonal.get(i+1);
-				if(playingGrid[row][col] != null) {
-					if(playingGrid[row][col].getDiscColor()
-							.equals(playingGrid[rowIndex][columnIndex].getDiscColor()))
-						win = true;
-					else
-						win = false;
-				}
+		// Here we want to check if there are at least four elements in the left diagonal
+		ArrayList<ArrayList<Integer>> diagonallyLeftAligned = areFourDiagonallyLeftAligned(playingGrid[rowIndex][columnIndex]);
+		ArrayList<Integer> diagonallyLeftAlignedBottom = diagonallyLeftAligned.get(0);
+		ArrayList<Integer> diagonallyLeftAlignedTop = diagonallyLeftAligned.get(1);
+		//Checks if there are bottom aligned disc
+		if(!diagonallyLeftAlignedBottom.isEmpty()) {
+			for(int i = 0; i < diagonallyLeftAlignedBottom.size(); i = i+2) {
+				int row = diagonallyLeftAlignedBottom.get(i);
+				int col = diagonallyLeftAlignedBottom.get(i+1);
+				if(playingGrid[row][col].getDiscColor()
+						.equals(playingGrid[rowIndex][columnIndex].getDiscColor()))
+					win = true;
+				else
+					win = false;
 			}
-			if(win) {
+			if(win)
 				return true;
-			}
 		}
-		
-		// Here we want to check if there are at least four elements in the right diagonal: if it has then 
-		// we will check if there are four aligned colored disc
-		if(rightDiagonal.size()/2 >= 4) {
-			for(int i = 0; i < rightDiagonal.size(); i = i+2) {
-				int row = rightDiagonal.get(i);
-				int col = rightDiagonal.get(i+1);
-				if(playingGrid[row][col] != null) {
-					if(playingGrid[row][col].getDiscColor()
-							.equals(playingGrid[rowIndex][columnIndex].getDiscColor()))
-						win = true;
-					else
-						win = false;
-				}
+		//Checks if there are top aligned disc
+		if(!diagonallyLeftAlignedTop.isEmpty()) {
+			for(int i = 0; i < diagonallyLeftAlignedTop.size(); i = i+2) {
+				int row = diagonallyLeftAlignedTop.get(i);
+				int col = diagonallyLeftAlignedTop.get(i+1);
+				if(playingGrid[row][col].getDiscColor()
+						.equals(playingGrid[rowIndex][columnIndex].getDiscColor()))
+					win = true;
+				else
+					win = false;
 			}
-			if(win) {
+			if(win)
 				return true;
+		}
+				
+		// Here we want to check if there are at least four elements in the right diagonal
+		ArrayList<ArrayList<Integer>> diagonallyRightAligned = areFourDiagonallyRightAligned(playingGrid[rowIndex][columnIndex]);
+		ArrayList<Integer> diagonallyRightAlignedBottom = diagonallyRightAligned.get(0);
+		ArrayList<Integer> diagonallyRightAlignedTop = diagonallyRightAligned.get(1);
+		//Checks if there are bottom aligned disc
+		if(!diagonallyRightAlignedBottom.isEmpty()) {
+			for(int i = 0; i < diagonallyRightAlignedBottom.size(); i++) {
+				int row = diagonallyRightAlignedBottom.get(i);
+				int col = diagonallyRightAlignedBottom.get(i+1);
+				if(playingGrid[row][col].getDiscColor()
+						.equals(playingGrid[rowIndex][columnIndex].getDiscColor()))
+					win = true;
+				else
+					win = false;
 			}
-		}*/
+			if(win)
+				return true;
+		}
+		//Checks if there are top aligned disc
+		if(!diagonallyRightAlignedTop.isEmpty()) {
+			for(int i = 0; i < diagonallyRightAlignedTop.size(); i = i+2) {
+				int row = diagonallyRightAlignedTop.get(i);
+				int col = diagonallyRightAlignedTop.get(i+1);
+				if(playingGrid[row][col].getDiscColor()
+						.equals(playingGrid[rowIndex][columnIndex].getDiscColor()))
+					win = true;
+				else
+					win = false;
+			}
+			if(win)
+				return true;
+		}
 		
 		//If we don't have four aligned colored disc in any of the configuration above then the move played
 		// is not the winning move
@@ -317,4 +288,150 @@ public class PlayingGrid {
 		
 	}
 	
+	
+	// OKAY FUNZIONA
+	public ArrayList<Integer> areFourVerticalAligned(ColoredDisc disc){
+		ArrayList<Integer> aligned = new ArrayList<Integer>();
+		if(disc.getRow() < 3) {
+			for(int i = 1; i < 4; i++) {
+				if(playingGrid[disc.getRow() + i][disc.getColumn()] == null || 
+						!playingGrid[disc.getRow() + i][disc.getColumn()].getDiscColor()
+						.equals(disc.getDiscColor())) {
+					aligned = new ArrayList<Integer>();
+					break;
+				}
+				else {
+					aligned.add(disc.getRow() + i);
+					aligned.add(disc.getColumn());
+				}
+			}
+		}
+		return aligned;
+	}
+	
+	
+	// OKAY FUNZIONA
+	public ArrayList<Integer> areFourHorizontallyRightAligned(ColoredDisc disc){
+		ArrayList<Integer> aligned = new ArrayList<Integer>();
+		if(disc.getColumn() < 4) {
+			for(int i = 1; i < 4; i++) {
+				if(playingGrid[disc.getRow()][disc.getColumn() + i] == null ||
+						!playingGrid[disc.getRow()][disc.getColumn() + i].getDiscColor()
+						.equals(disc.getDiscColor())) {
+					aligned = new ArrayList<Integer>();
+					break;
+				}
+				else {
+					aligned.add(disc.getRow());
+					aligned.add(disc.getColumn() + i);
+				}
+			}
+		}
+		return aligned;
+	}
+	
+	// OKAY FUNZIONA
+	public ArrayList<Integer> areFourHorizontallyLeftAligned(ColoredDisc disc){
+		ArrayList<Integer> aligned = new ArrayList<Integer>();
+		if(disc.getColumn() >= 3) {
+			for(int i = 1; i < 4; i++) {
+				if(playingGrid[disc.getRow()][disc.getColumn() - i] == null ||
+						!playingGrid[disc.getRow()][disc.getColumn() - i].getDiscColor()
+						.equals(disc.getDiscColor())) {
+					aligned = new ArrayList<Integer>();
+					break;
+				}
+				else {
+					aligned.add(disc.getRow());
+					aligned.add(disc.getColumn() - i);
+				}
+			}
+		}
+		return aligned;
+	}
+	
+	//OKAY FUNZIONA
+	public ArrayList<ArrayList<Integer>> areFourDiagonallyLeftAligned(ColoredDisc disc){
+		ArrayList<ArrayList<Integer>> aligned = new ArrayList<ArrayList<Integer>>();
+		ArrayList<Integer> alignedBottom = new ArrayList<Integer>();
+		ArrayList<Integer> alignedTop = new ArrayList<Integer>();
+		if(disc.getRow()+3 < ROWS) {
+			for(int i = disc.getRow()+1; i < disc.getRow()+4; i++) {
+				int j = disc.getColumn() + Math.abs(disc.getRow()-i);
+				if(j < COLUMNS) {
+					if(playingGrid[i][j] == null || !playingGrid[i][j].getDiscColor()
+							.equals(disc.getDiscColor())) {
+						alignedBottom = new ArrayList<Integer>();
+						break;
+					}
+					else {
+						alignedBottom.add(i);
+						alignedBottom.add(j);
+					}
+				}
+			}
+		}
+		if(disc.getRow()-3 >= 0) {
+			for(int i = disc.getRow()-1; i > disc.getRow()-4; i--) {
+				int j = disc.getColumn() - Math.abs(disc.getRow()-i);
+				if(j >= 0) {
+					if(playingGrid[i][j] == null || !playingGrid[i][j].getDiscColor()
+							.equals(disc.getDiscColor())) {
+						alignedTop = new ArrayList<Integer>();
+						break;
+					}
+					else {
+						alignedTop.add(i);
+						alignedTop.add(j);
+					}
+				}
+			}	
+		}
+		aligned.add(alignedBottom);
+		aligned.add(alignedTop);
+		return aligned;
+	}
+	
+	
+	//OKAY FUNZIONA
+	public ArrayList<ArrayList<Integer>> areFourDiagonallyRightAligned(ColoredDisc disc){
+		ArrayList<ArrayList<Integer>> aligned = new ArrayList<ArrayList<Integer>>();
+		ArrayList<Integer> alignedBottom = new ArrayList<Integer>();
+		ArrayList<Integer> alignedTop = new ArrayList<Integer>();
+		if(disc.getRow()+3 < ROWS) {
+			for(int i = disc.getRow()+1; i < disc.getRow()+4; i++) {
+				int j = disc.getColumn() - Math.abs(disc.getRow()-i);
+				if(j >= 0) {
+					if(playingGrid[i][j] == null || !playingGrid[i][j].getDiscColor()
+							.equals(disc.getDiscColor())) {
+						alignedBottom = new ArrayList<Integer>();
+						break;
+					}
+					else {
+						alignedBottom.add(i);
+						alignedBottom.add(j);
+					}
+				}
+			}
+		}
+		if(disc.getRow()-3 >= 0) {
+			for(int i = disc.getRow()-1; i > disc.getRow()-4; i--) {
+				int j = disc.getColumn() + Math.abs(disc.getRow()-i);
+				if(j < COLUMNS) {
+					if(playingGrid[i][j] == null || !playingGrid[i][j].getDiscColor()
+							.equals(disc.getDiscColor())) {
+						alignedTop = new ArrayList<Integer>();
+						break;
+					}
+					else {
+						alignedTop.add(i);
+						alignedTop.add(j);
+					}
+				}
+			}
+		}
+		aligned.add(alignedBottom);
+		aligned.add(alignedTop);
+		return aligned;
+	}
 }

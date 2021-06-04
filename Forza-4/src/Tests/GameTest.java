@@ -1,6 +1,7 @@
 package Tests;
 
-import gameComponents.*; 
+import gameComponents.*;
+
 import java.util.Scanner;
 
 
