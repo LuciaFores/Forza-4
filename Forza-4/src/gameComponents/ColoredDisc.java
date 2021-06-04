@@ -62,18 +62,6 @@ public class ColoredDisc {
 	}
 	
 	/**
-	 * This method will check if a point in which a colored disc has been put is a point of the grid
-	 * (maybe useless or maybe useful for a stress test?)
-	 * @param rowIndex The x-coordinate of the point in which the disc has been put
-	 * @param columnIndex The y-coordinate of the point in which the disc has been put
-	 * @return The outcome of the check: true if the point in which the disc has been put is legal, false otherwise
-	 */
-	/*public boolean isALegalPoint(int rowIndex, int columnIndex) {
-		if((rowIndex >= 0 && rowIndex <= 5) && (columnIndex >= 0 && columnIndex <= 6)) return true;
-		else return false;
-	}*/
-	
-	/**
 	 * The method is used to set the potential move that the player want to do;
 	 * at first the method checks if the point of the grid in which the colored disc should be put exists: if exists sets
 	 * the row index to the index given in the parameters and the column index given in the parameters, otherwise the method
@@ -81,7 +69,7 @@ public class ColoredDisc {
 	 * @param rowMove The index of the row in which the player wants to put the colored disc
 	 * @param columnMove The index of the column in which the player wants to put the colored dis pèc
 	 */
-	public void setMove(int columnMove) {
+	public void setColumn(int columnMove) {
 		if(columnMove < 7)
 			column = columnMove;
 		else
@@ -89,7 +77,7 @@ public class ColoredDisc {
 	}
 	
 	
-	
+	//AGGIUNGI JAVADOC
 	public void setRow(int rowIndex) {
 		row = rowIndex;
 	}

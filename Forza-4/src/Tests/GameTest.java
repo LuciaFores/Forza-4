@@ -89,7 +89,7 @@ public class GameTest {
 				ColoredDisc activeDisc = new ColoredDisc(player1.getPlayerColor());
 				System.out.println(player1.getPlayerName() + " in which column do you want to put your disc?");
 				int columnIndex = in.nextInt();
-				activeDisc.setMove(columnIndex);
+				activeDisc.setColumn(columnIndex);
 				if(grid.addColoredDisc(activeDisc)) {
 					if(grid.isTheWinningMove(activeDisc.getRow(), activeDisc.getColumn())) {
 						System.out.println("Congratulations " + player1.getPlayerName() + " you won!");
@@ -104,7 +104,7 @@ public class GameTest {
 				ColoredDisc activeDisc = new ColoredDisc(player2.getPlayerColor());
 				System.out.println(player2.getPlayerName() + " in which column do you want to put your disc?");
 				int columnIndex = in.nextInt();
-				activeDisc.setMove(columnIndex);
+				activeDisc.setColumn(columnIndex);
 				if(grid.addColoredDisc(activeDisc)) {
 					if(grid.isTheWinningMove(activeDisc.getRow(), activeDisc.getColumn())) {
 						System.out.println("Congratulations " + player2.getPlayerName() + " you won!");
