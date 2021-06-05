@@ -1,9 +1,15 @@
 package gameComponents;
 
+import java.io.FileReader;
 import java.util.Random;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
-/* CREA UN METODO CHE CONTROLLA SE SI STA PROVANDO A CREARE PIU' DI DUE GIOCATORI */
+
+/* CREA UN METODO CHE CONTROLLA SE SI STA PROVANDO A CREARE PIU' DI DUE GIOCATORI 
+ * AGGIUNGI IL PARAMETRO ISTHEACTIVEPLAYER PER IL SALVATAGGIO
+ */
 
 /**
  * This class models a player of Connect Four.
@@ -48,6 +54,14 @@ public class Player {
 		playerColor = "";
 		playerNumber = 0;
 	}
+	
+	
+	public Player(String nickname, String color, int number) {
+		playerName = nickname;
+		playerColor = color;
+		playerNumber = number;
+	}
+	
 	
 	/**
 	 * This method is used to get the nickname of the current player
@@ -175,5 +189,57 @@ public class Player {
 	 */
 	public void setPlayerColor(String color) {
 		playerColor = color;
+	}
+	
+	
+	// salvataggio e caricamento
+	public void savingPlayers(JSONObject savedGame, Player otherPlayer) {
+		JSONObject player1 = new JSONObject();
+		JSONObject player2 = new JSONObject();
+		
+		player1.put("playerName", playerName);
+		player1.put("playerNumber", playerNumber);
+		player1.put("playerColor", playerColor);
+		
+		player2.put("playerName", otherPlayer.getPlayerName());
+		player2.put("playerNumber", otherPlayer.getPlayerNumber());
+		player2.put("playerColor", otherPlayer.getPlayerNumber());
+		
+		savedGame.put("player1", player1);
+		savedGame.put("player2", player2);
+	}
+	
+	
+	public Player loadingPlayer1(String saveFile) {
+		JSONParser parser = new JSONParser();
+		
+		try{
+			JSONObject readJSONPlayerFile = (JSONObject)parser.parse(new FileReader(saveFile));
+			JSONObject JSONPlayer1 = (JSONObject) readJSONPlayerFile.get("player1");
+			Player player1 = new Player(JSONPlayer1.get("playerName").toString(), JSONPlayer1.get("playerColor").toString(),
+					Integer.parseInt(JSONPlayer1.get("playerNumber").toString()));
+			return player1;
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
+	}
+		
+		
+	public Player loadingPlayer2(String saveFile) {
+		JSONParser parser = new JSONParser();
+		
+		try{
+			JSONObject readJSONPlayerFile = (JSONObject)parser.parse(new FileReader(saveFile));
+			JSONObject JSONPlayer2 = (JSONObject) readJSONPlayerFile.get("player2");
+			Player player2 = new Player(JSONPlayer2.get("playerName").toString(), JSONPlayer2.get("playerColor").toString(),
+					Integer.parseInt(JSONPlayer2.get("playerNumber").toString()));
+			return player2;
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

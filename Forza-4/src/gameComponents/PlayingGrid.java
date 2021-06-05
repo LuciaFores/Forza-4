@@ -1,5 +1,11 @@
 package gameComponents;
 
+import java.io.FileReader;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
 /**
  * This class models a playing grid for Connect Four.
  * The playing grid is a seven-column, six-rows grid in which colored discs can be inserted during the game.
@@ -42,6 +48,22 @@ public class PlayingGrid {
 		for(int i = 0; i<ROWS; i++) {
 			for(int j = 0; j<COLUMNS; j++) {
 				playingGrid[i][j] = null;
+			}
+		}
+	}
+	
+	
+	public PlayingGrid(int[][] IntegerPlayingGrid) {
+		playingGrid = new ColoredDisc[ROWS][COLUMNS];
+		freeSpaces = ROWS*COLUMNS;
+		for(int i = 0; i < ROWS; i++) {
+			for(int j = 0; j < COLUMNS; j++) {
+				if(IntegerPlayingGrid[i][j] == -1)
+					playingGrid[i][j] = null;
+				else if(IntegerPlayingGrid[i][j] == 0)
+					playingGrid[i][j] = new ColoredDisc("red", i, j);
+				else if(IntegerPlayingGrid[i][j] == 1)
+					playingGrid[i][j] = new ColoredDisc("yellow", i, j);
 			}
 		}
 	}
@@ -403,4 +425,94 @@ public class PlayingGrid {
 		
 	}
 	
+	// traduzioni
+	
+	/**
+	 * This method is used to convert a ColoredDisc matrix into an Integer matrix so that it can be
+	 * easily saved into a JSON file for saving.
+	 * The matrix will be converted as it follows:
+	 * - cells in which there isn't a disc (they contain the value null) will be converted in -1;
+	 * - cells in which there is a red disc will be converted in 0;
+	 * - cells in which there is a yellow disc will be converted in 1;
+	 * @return JSONPlayingGrid The playing grid converted into an Integer matrix
+	 */
+	public int[][] playingGridToJSONPlayingGrid() {
+		int[][] JSONPlayingGrid = new int[ROWS][COLUMNS];
+		for(int i = 0; i < ROWS; i++) {
+			for(int j = 0; j < COLUMNS; j++) {
+				if(playingGrid[i][j] == null)
+					JSONPlayingGrid[i][j] = -1;
+				else if(playingGrid[i][j].getDiscColor().equals("red"))
+					JSONPlayingGrid[i][j] = 0;
+				else if(playingGrid[i][j].getDiscColor().equals("yellow"))
+					JSONPlayingGrid[i][j] = 1;
+			}
+		}
+		return JSONPlayingGrid;
+	}
+	
+	
+	public int[][] JSONPlayingGridToIntegerPlayingGrid(JSONObject JSONPlayingGrid){
+		int[][] integerPlayingGrid = new int[ROWS][COLUMNS];
+		String[] firstRow = JSONPlayingGrid.get("firstRow").toString().split("[\\[,\\]]");
+		String[] secondRow = JSONPlayingGrid.get("secondRow").toString().split("[\\[,\\]]");
+		String[] thirdRow = JSONPlayingGrid.get("thirdRow").toString().split("[\\[,\\]]");
+		String[] fourthRow = JSONPlayingGrid.get("fourthRow").toString().split("[\\[,\\]]");
+		String[] fifthRow = JSONPlayingGrid.get("fifthRow").toString().split("[\\[,\\]]");
+		String[] sixthRow = JSONPlayingGrid.get("sixthRow").toString().split("[\\[,\\]]");
+		
+		for(int j = 0; j < COLUMNS; j++) {
+			integerPlayingGrid[0][j] = Integer.parseInt(firstRow[j+1]);
+			integerPlayingGrid[1][j] = Integer.parseInt(secondRow[j+1]);
+			integerPlayingGrid[2][j] = Integer.parseInt(thirdRow[j+1]);
+			integerPlayingGrid[3][j] = Integer.parseInt(fourthRow[j+1]);
+			integerPlayingGrid[4][j] = Integer.parseInt(fifthRow[j+1]);
+			integerPlayingGrid[5][j] = Integer.parseInt(sixthRow[j+1]);
+		}
+		
+		return integerPlayingGrid;
+	}
+	
+	
+	// salvataggio e caricamento
+	public void savingPlayingGrid(JSONObject savedGame, int[][] JSONPlayingGrid) {
+		JSONObject playingMatrix = new JSONObject();
+		JSONArray firstRow = new JSONArray();
+		JSONArray secondRow = new JSONArray();
+		JSONArray thirdRow = new JSONArray();
+		JSONArray fourthRow = new JSONArray();
+		JSONArray fifthRow = new JSONArray();
+		JSONArray sixthRow = new JSONArray();
+		
+		for(int j = 0; j < COLUMNS; j++) {
+			firstRow.add(JSONPlayingGrid[0][j]);
+			secondRow.add(JSONPlayingGrid[1][j]);
+			thirdRow.add(JSONPlayingGrid[2][j]);
+			fourthRow.add(JSONPlayingGrid[3][j]);
+			fifthRow.add(JSONPlayingGrid[4][j]);
+			sixthRow.add(JSONPlayingGrid[5][j]);
+		}
+		
+		playingMatrix.put("firstRow", firstRow);
+		playingMatrix.put("secondRow", secondRow);
+		playingMatrix.put("thirdRow", thirdRow);
+		playingMatrix.put("fourthRow", fourthRow);
+		playingMatrix.put("fifthRow", fifthRow);
+		playingMatrix.put("sixthRow", sixthRow);
+		
+		savedGame.put("playingGrid", playingMatrix);
+	}
+	
+	
+	public JSONObject loadingPlayingGrid(String saveFile) {
+		JSONParser parser = new JSONParser();
+		try {
+			JSONObject JSONPlayingGrid = (JSONObject)parser.parse(new FileReader(saveFile));
+			return JSONPlayingGrid;
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 }

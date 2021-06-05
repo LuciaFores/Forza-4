@@ -37,6 +37,14 @@ public class ColoredDisc {
 		column = -1;
 	}
 	
+	
+	public ColoredDisc(String color, int rowIndex, int columnIndex) {
+		discColor = color;
+		row = rowIndex;
+		column = columnIndex;
+	}
+	
+	
 	/**
 	 * This method is used to get the color of the current colored disc
 	 * @return Current value of discColor
