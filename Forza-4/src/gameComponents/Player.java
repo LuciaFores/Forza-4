@@ -1,6 +1,8 @@
 package gameComponents;
 
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Random;
 
 import org.json.simple.JSONObject;
@@ -39,6 +41,8 @@ public class Player {
 	private int playerNumber;
 	
 	
+	private boolean isTheActivePlayer;
+	
 	// Methods
 	
 	/**
@@ -51,15 +55,21 @@ public class Player {
 	 */
 	public Player(String nickname) {
 		playerName = nickname;
-		playerColor = "";
 		playerNumber = 0;
+		playerColor = "";
 	}
 	
 	
-	public Player(String nickname, String color, int number) {
+	/*public Player(String nickname, String color, int number, boolean activePlayer) {
 		playerName = nickname;
 		playerColor = color;
 		playerNumber = number;
+		isTheActivePlayer = activePlayer;
+	}*/
+	public Player() {
+		playerName = "";
+		playerNumber = 0;
+		playerColor = "";
 	}
 	
 	
@@ -88,6 +98,11 @@ public class Player {
 	 */
 	public int getPlayerNumber() {
 		return playerNumber;
+	}
+	
+	
+	public boolean getIsTheActivePlayer() {
+		return isTheActivePlayer;
 	}
 	
 	/**
@@ -131,6 +146,26 @@ public class Player {
 		}
 		else
 			System.out.println("The value is not valid");
+	}
+	
+	
+	/**
+	 * This method is used to set the value of the instance variable playerColor.
+	 * The method also checks if the value to be set is a legal one.
+	 * @param color The value to give to the instance variable playerColor
+	 */
+	public void setPlayerColor(String color) {
+		playerColor = color;
+	}
+	
+	
+	public void setIsTheActivePlayer(boolean activePlayer) {
+		isTheActivePlayer = activePlayer;
+	}
+	
+	
+	public void setPlayerName(String nickname) {
+		playerName = nickname;
 	}
 	
 	
@@ -182,18 +217,9 @@ public class Player {
 	}
 	
 	
-	/**
-	 * This method is used to set the value of the instance variable playerColor.
-	 * The method also checks if the value to be set is a legal one.
-	 * @param color The value to give to the instance variable playerColor
-	 */
-	public void setPlayerColor(String color) {
-		playerColor = color;
-	}
-	
-	
 	// salvataggio e caricamento
-	public void savingPlayers(JSONObject savedGame, Player otherPlayer) {
+	public void savingPlayers(FileWriter saveFile, Player otherPlayer) {
+		JSONObject savedPlayers = new JSONObject();
 		JSONObject player1 = new JSONObject();
 		JSONObject player2 = new JSONObject();
 		
@@ -203,43 +229,56 @@ public class Player {
 		
 		player2.put("playerName", otherPlayer.getPlayerName());
 		player2.put("playerNumber", otherPlayer.getPlayerNumber());
-		player2.put("playerColor", otherPlayer.getPlayerNumber());
+		player2.put("playerColor", otherPlayer.getPlayerColor());
 		
-		savedGame.put("player1", player1);
-		savedGame.put("player2", player2);
+		savedPlayers.put("player1", player1);
+		savedPlayers.put("player2", player2);
+		
+		try {
+			saveFile.write(savedPlayers.toString());
+			saveFile.flush();
+			//saveFile.close();
+		}
+		catch(IOException e){
+			e.printStackTrace();
+		}
 	}
 	
 	
-	public Player loadingPlayer1(String saveFile) {
+	public void loadingPlayer1(String saveFile) {
 		JSONParser parser = new JSONParser();
 		
 		try{
-			JSONObject readJSONPlayerFile = (JSONObject)parser.parse(new FileReader(saveFile));
+			JSONObject readJSONPlayerFile = (JSONObject)parser.parse(new FileReader("SavedFiles/" + saveFile));
 			JSONObject JSONPlayer1 = (JSONObject) readJSONPlayerFile.get("player1");
-			Player player1 = new Player(JSONPlayer1.get("playerName").toString(), JSONPlayer1.get("playerColor").toString(),
-					Integer.parseInt(JSONPlayer1.get("playerNumber").toString()));
-			return player1;
+			setPlayerName(JSONPlayer1.get("playerName").toString());
+			setPlayerNumber(Integer.parseInt(JSONPlayer1.get("playerNumber").toString()));
+			setPlayerColor(JSONPlayer1.get("playerColor").toString());
+			/*Player player1 = new Player(JSONPlayer1.get("playerName").toString(), JSONPlayer1.get("playerColor").toString(),
+					Integer.parseInt(JSONPlayer1.get("playerNumber").toString()), (boolean)JSONPlayer1.get("isTheActivePlayer"));*/
 		}
 		catch(Exception e){
 			e.printStackTrace();
-			return null;
 		}
 	}
 		
 		
-	public Player loadingPlayer2(String saveFile) {
+	public void loadingPlayer2(String saveFile) {
 		JSONParser parser = new JSONParser();
 		
 		try{
-			JSONObject readJSONPlayerFile = (JSONObject)parser.parse(new FileReader(saveFile));
+			JSONObject readJSONPlayerFile = (JSONObject)parser.parse(new FileReader("SavedFiles/" + saveFile));
 			JSONObject JSONPlayer2 = (JSONObject) readJSONPlayerFile.get("player2");
-			Player player2 = new Player(JSONPlayer2.get("playerName").toString(), JSONPlayer2.get("playerColor").toString(),
-					Integer.parseInt(JSONPlayer2.get("playerNumber").toString()));
-			return player2;
+			setPlayerName(JSONPlayer2.get("playerName").toString());
+			setPlayerNumber(Integer.parseInt(JSONPlayer2.get("playerNumber").toString()));
+			setPlayerColor(JSONPlayer2.get("playerColor").toString());
+			/*Player player2 = new Player(JSONPlayer2.get("playerName").toString(), JSONPlayer2.get("playerColor").toString(),
+					Integer.parseInt(JSONPlayer2.get("playerNumber").toString()), (boolean)JSONPlayer2.get("isTheActivePlayer"));*/
+			
 		}
 		catch(Exception e){
 			e.printStackTrace();
-			return null;
+			
 		}
 	}
 }

@@ -33,7 +33,7 @@ public class WritingJSONFile {
 		player.put("player2", player2);
 		// We want to write the JSON object into a text file
 		try {
-			FileWriter file = new FileWriter("player.json");
+			FileWriter file = new FileWriter("SavedFiles/player.json");
 			file.write(player.toString());
 			file.flush();
 			file.close();

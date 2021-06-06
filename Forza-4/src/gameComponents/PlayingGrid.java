@@ -1,6 +1,8 @@
 package gameComponents;
 
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -53,16 +55,17 @@ public class PlayingGrid {
 	}
 	
 	
-	public PlayingGrid(int[][] IntegerPlayingGrid) {
+	public PlayingGrid(String saveFile) {
 		playingGrid = new ColoredDisc[ROWS][COLUMNS];
 		freeSpaces = ROWS*COLUMNS;
+		int[][] integerPlayingGrid = LoadJSONPlayingGridToIntegerPlayingGrid(saveFile);
 		for(int i = 0; i < ROWS; i++) {
 			for(int j = 0; j < COLUMNS; j++) {
-				if(IntegerPlayingGrid[i][j] == -1)
+				if(integerPlayingGrid[i][j] == -1)
 					playingGrid[i][j] = null;
-				else if(IntegerPlayingGrid[i][j] == 0)
+				else if(integerPlayingGrid[i][j] == 0)
 					playingGrid[i][j] = new ColoredDisc("red", i, j);
-				else if(IntegerPlayingGrid[i][j] == 1)
+				else if(integerPlayingGrid[i][j] == 1)
 					playingGrid[i][j] = new ColoredDisc("yellow", i, j);
 			}
 		}
@@ -452,30 +455,38 @@ public class PlayingGrid {
 	}
 	
 	
-	public int[][] JSONPlayingGridToIntegerPlayingGrid(JSONObject JSONPlayingGrid){
-		int[][] integerPlayingGrid = new int[ROWS][COLUMNS];
-		String[] firstRow = JSONPlayingGrid.get("firstRow").toString().split("[\\[,\\]]");
-		String[] secondRow = JSONPlayingGrid.get("secondRow").toString().split("[\\[,\\]]");
-		String[] thirdRow = JSONPlayingGrid.get("thirdRow").toString().split("[\\[,\\]]");
-		String[] fourthRow = JSONPlayingGrid.get("fourthRow").toString().split("[\\[,\\]]");
-		String[] fifthRow = JSONPlayingGrid.get("fifthRow").toString().split("[\\[,\\]]");
-		String[] sixthRow = JSONPlayingGrid.get("sixthRow").toString().split("[\\[,\\]]");
-		
-		for(int j = 0; j < COLUMNS; j++) {
-			integerPlayingGrid[0][j] = Integer.parseInt(firstRow[j+1]);
-			integerPlayingGrid[1][j] = Integer.parseInt(secondRow[j+1]);
-			integerPlayingGrid[2][j] = Integer.parseInt(thirdRow[j+1]);
-			integerPlayingGrid[3][j] = Integer.parseInt(fourthRow[j+1]);
-			integerPlayingGrid[4][j] = Integer.parseInt(fifthRow[j+1]);
-			integerPlayingGrid[5][j] = Integer.parseInt(sixthRow[j+1]);
+	public int[][] LoadJSONPlayingGridToIntegerPlayingGrid(String saveFile){
+		JSONParser parser = new JSONParser();
+		try {
+			JSONObject JSONPlayingGrid = (JSONObject)parser.parse(new FileReader("SavedFiles/" + saveFile));
+			int[][] integerPlayingGrid = new int[ROWS][COLUMNS];
+			String[] firstRow = JSONPlayingGrid.get("firstRow").toString().split("[\\[,\\]]");
+			String[] secondRow = JSONPlayingGrid.get("secondRow").toString().split("[\\[,\\]]");
+			String[] thirdRow = JSONPlayingGrid.get("thirdRow").toString().split("[\\[,\\]]");
+			String[] fourthRow = JSONPlayingGrid.get("fourthRow").toString().split("[\\[,\\]]");
+			String[] fifthRow = JSONPlayingGrid.get("fifthRow").toString().split("[\\[,\\]]");
+			String[] sixthRow = JSONPlayingGrid.get("sixthRow").toString().split("[\\[,\\]]");
+			
+			for(int j = 0; j < COLUMNS; j++) {
+				integerPlayingGrid[0][j] = Integer.parseInt(firstRow[j+1]);
+				integerPlayingGrid[1][j] = Integer.parseInt(secondRow[j+1]);
+				integerPlayingGrid[2][j] = Integer.parseInt(thirdRow[j+1]);
+				integerPlayingGrid[3][j] = Integer.parseInt(fourthRow[j+1]);
+				integerPlayingGrid[4][j] = Integer.parseInt(fifthRow[j+1]);
+				integerPlayingGrid[5][j] = Integer.parseInt(sixthRow[j+1]);
+			}
+			return integerPlayingGrid;
 		}
-		
-		return integerPlayingGrid;
+		catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	
 	// salvataggio e caricamento
-	public void savingPlayingGrid(JSONObject savedGame, int[][] JSONPlayingGrid) {
+	public void savingPlayingGrid(FileWriter saveFile, int[][] JSONPlayingGrid) {
+		JSONObject savedGrid = new JSONObject();
 		JSONObject playingMatrix = new JSONObject();
 		JSONArray firstRow = new JSONArray();
 		JSONArray secondRow = new JSONArray();
@@ -500,19 +511,15 @@ public class PlayingGrid {
 		playingMatrix.put("fifthRow", fifthRow);
 		playingMatrix.put("sixthRow", sixthRow);
 		
-		savedGame.put("playingGrid", playingMatrix);
-	}
-	
-	
-	public JSONObject loadingPlayingGrid(String saveFile) {
-		JSONParser parser = new JSONParser();
+		savedGrid.put("playingGrid", playingMatrix);
+		
 		try {
-			JSONObject JSONPlayingGrid = (JSONObject)parser.parse(new FileReader(saveFile));
-			return JSONPlayingGrid;
+			saveFile.write(savedGrid.toString());
+			saveFile.flush();
+			//saveFile.close();
 		}
-		catch(Exception e) {
+		catch(IOException e){
 			e.printStackTrace();
-			return null;
 		}
 	}
 }
