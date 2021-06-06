@@ -58,7 +58,8 @@ public class PlayingGrid {
 	public PlayingGrid(String saveFile) {
 		playingGrid = new ColoredDisc[ROWS][COLUMNS];
 		freeSpaces = ROWS*COLUMNS;
-		int[][] integerPlayingGrid = LoadJSONPlayingGridToIntegerPlayingGrid(saveFile);
+		int[][] integerPlayingGrid = new int[ROWS][COLUMNS];
+		integerPlayingGrid = LoadJSONPlayingGridToIntegerPlayingGrid(saveFile);
 		for(int i = 0; i < ROWS; i++) {
 			for(int j = 0; j < COLUMNS; j++) {
 				if(integerPlayingGrid[i][j] == -1)
@@ -458,7 +459,8 @@ public class PlayingGrid {
 	public int[][] LoadJSONPlayingGridToIntegerPlayingGrid(String saveFile){
 		JSONParser parser = new JSONParser();
 		try {
-			JSONObject JSONPlayingGrid = (JSONObject)parser.parse(new FileReader("SavedFiles/" + saveFile));
+			JSONObject JSONReadFile = (JSONObject)parser.parse(new FileReader("SavedFiles/" + saveFile));
+			JSONObject JSONPlayingGrid = (JSONObject) JSONReadFile.get("playingGrid");
 			int[][] integerPlayingGrid = new int[ROWS][COLUMNS];
 			String[] firstRow = JSONPlayingGrid.get("firstRow").toString().split("[\\[,\\]]");
 			String[] secondRow = JSONPlayingGrid.get("secondRow").toString().split("[\\[,\\]]");
@@ -485,7 +487,7 @@ public class PlayingGrid {
 	
 	
 	// salvataggio e caricamento
-	public void savingPlayingGrid(FileWriter saveFile, int[][] JSONPlayingGrid) {
+	public JSONObject savingPlayingGrid(JSONObject gameData, int[][] JSONPlayingGrid) {
 		JSONObject savedGrid = new JSONObject();
 		JSONObject playingMatrix = new JSONObject();
 		JSONArray firstRow = new JSONArray();
@@ -511,15 +513,17 @@ public class PlayingGrid {
 		playingMatrix.put("fifthRow", fifthRow);
 		playingMatrix.put("sixthRow", sixthRow);
 		
-		savedGrid.put("playingGrid", playingMatrix);
+		gameData.put("playingGrid", playingMatrix);
 		
-		try {
+		return gameData;
+		
+		/*try {
 			saveFile.write(savedGrid.toString());
 			saveFile.flush();
 			//saveFile.close();
 		}
 		catch(IOException e){
 			e.printStackTrace();
-		}
+		}*/
 	}
 }

@@ -218,7 +218,7 @@ public class Player {
 	
 	
 	// salvataggio e caricamento
-	public void savingPlayers(FileWriter saveFile, Player otherPlayer) {
+	public JSONObject savingPlayers(JSONObject gameData, Player otherPlayer) {
 		JSONObject savedPlayers = new JSONObject();
 		JSONObject player1 = new JSONObject();
 		JSONObject player2 = new JSONObject();
@@ -231,17 +231,18 @@ public class Player {
 		player2.put("playerNumber", otherPlayer.getPlayerNumber());
 		player2.put("playerColor", otherPlayer.getPlayerColor());
 		
-		savedPlayers.put("player1", player1);
-		savedPlayers.put("player2", player2);
+		gameData.put("player1", player1);
+		gameData.put("player2", player2);
 		
-		try {
+		return gameData;
+		/*try {
 			saveFile.write(savedPlayers.toString());
 			saveFile.flush();
 			//saveFile.close();
 		}
 		catch(IOException e){
 			e.printStackTrace();
-		}
+		}*/
 	}
 	
 	

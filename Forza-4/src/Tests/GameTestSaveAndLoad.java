@@ -18,7 +18,7 @@ public class GameTestSaveAndLoad {
 		//String answer = "";
 		boolean question = false;
 		int[][] savedGrid; 
-		JSONObject JSONsavedGame = new JSONObject();
+		JSONObject gameData = new JSONObject();
 		
 		System.out.println("WELCOME TO CONNECT 4");
 		System.out.println("Hello player, do you want to begin a new game or load a previous one?");
@@ -68,7 +68,6 @@ public class GameTestSaveAndLoad {
 						player1.loadingPlayer1(savedFile);
 						Player player2 = new Player();
 						player2.loadingPlayer2(savedFile);
-						
 						// creo la griglia
 						PlayingGrid grid = new PlayingGrid(savedFile);
 						
@@ -167,65 +166,78 @@ public class GameTestSaveAndLoad {
 			PlayingGrid grid = new PlayingGrid();
 			
 			// creo un salvataggio per la partita in corso
-			//Timestamp data = new Timestamp(System.currentTimeMillis());
-			String fileName = player1.getPlayerName() + "_" + player2.getPlayerName();
-			FileWriter savedGame;
+			Timestamp data = new Timestamp(System.currentTimeMillis());
+			String fileName = player1.getPlayerName() + "_" + player2.getPlayerName() + "_" + data;
+			
+			// salvataggio dello stato iniziale della partita
+			// salvo i giocatori
+			gameData = player1.savingPlayers(gameData, player2);
+			// salvo la griglia
+			savedGrid = grid.playingGridToJSONPlayingGrid();
+			gameData = grid.savingPlayingGrid(gameData, savedGrid);
+			
 			try {
-				savedGame = new FileWriter("SavedFiles/" + fileName + ".json");
-				// salvataggio dello stato iniziale della partita
-				// salvo i giocatori
-				player1.savingPlayers(savedGame, player2);
-				// salvo la griglia
-				savedGrid = grid.playingGridToJSONPlayingGrid();
-				grid.savingPlayingGrid(savedGame, savedGrid);
-				
-				// inizio il gioco
-				while(!grid.isItATie()) {
-					grid.playingGridPrinter();
-					if(question) {
-						System.out.println("Do you want to save the game? (y/n)");
-						String answer = in.next();
-						if(answer.equalsIgnoreCase("y")) {
-							player1.savingPlayers(savedGame, player2);
-							savedGrid = grid.playingGridToJSONPlayingGrid();
-							grid.savingPlayingGrid(savedGame, savedGrid);
+				FileWriter savedGame = new FileWriter("SavedFiles/" + fileName + ".json");
+				savedGame.write(gameData.toString());
+				savedGame.flush();
+				savedGame.close();
+			}
+			catch(IOException e){
+				e.printStackTrace();
+			}
+			
+			// inizio il gioco
+			while(!grid.isItATie()) {
+				grid.playingGridPrinter();
+				if(question) {
+					System.out.println("Do you want to save the game? (y/n)");
+					String answer = in.next();
+					if(answer.equalsIgnoreCase("y")) {
+						gameData = player1.savingPlayers(gameData, player2);
+						savedGrid = grid.playingGridToJSONPlayingGrid();
+						gameData = grid.savingPlayingGrid(gameData, savedGrid);
+						try {
+							FileWriter savedGame = new FileWriter("SavedFiles/" + fileName + ".json");
+							savedGame.write(gameData.toString());
+							savedGame.flush();
+							savedGame.close();
 						}
-					}
-					if(grid.getFreeSpaces() % 2 == 0) {
-						ColoredDisc activeDisc = new ColoredDisc(player1.getPlayerColor());
-						System.out.println(player1.getPlayerName() + " in which column do you want to put your disc?");
-						int columnIndex = in.nextInt();
-						activeDisc.setColumn(columnIndex);
-						if(grid.addColoredDisc(activeDisc)) {
-							if(grid.isTheWinningMove(activeDisc.getRow(), activeDisc.getColumn())) {
-								System.out.println("Congratulations " + player1.getPlayerName() + " you won!");
-								grid.playingGridPrinter();
-								break;
-							}
-							else
-								grid.playingGridPrinter();
-						}
-					}
-					if(grid.getFreeSpaces() % 2 == 1) {
-						ColoredDisc activeDisc = new ColoredDisc(player2.getPlayerColor());
-						System.out.println(player2.getPlayerName() + " in which column do you want to put your disc?");
-						int columnIndex = in.nextInt();
-						activeDisc.setColumn(columnIndex);
-						question = true;
-						if(grid.addColoredDisc(activeDisc)) {
-							if(grid.isTheWinningMove(activeDisc.getRow(), activeDisc.getColumn())) {
-								System.out.println("Congratulations " + player2.getPlayerName() + " you won!");
-								grid.playingGridPrinter();
-								break;
-							}
-							else
-								grid.playingGridPrinter();
+						catch(IOException e){
+							e.printStackTrace();
 						}
 					}
 				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				if(grid.getFreeSpaces() % 2 == 0) {
+					ColoredDisc activeDisc = new ColoredDisc(player1.getPlayerColor());
+					System.out.println(player1.getPlayerName() + " in which column do you want to put your disc?");
+					int columnIndex = in.nextInt();
+					activeDisc.setColumn(columnIndex);
+					if(grid.addColoredDisc(activeDisc)) {
+						if(grid.isTheWinningMove(activeDisc.getRow(), activeDisc.getColumn())) {
+							System.out.println("Congratulations " + player1.getPlayerName() + " you won!");
+							grid.playingGridPrinter();
+							break;
+						}
+						else
+							grid.playingGridPrinter();
+					}
+				}
+				if(grid.getFreeSpaces() % 2 == 1) {
+					ColoredDisc activeDisc = new ColoredDisc(player2.getPlayerColor());
+					System.out.println(player2.getPlayerName() + " in which column do you want to put your disc?");
+					int columnIndex = in.nextInt();
+					activeDisc.setColumn(columnIndex);
+					question = true;
+					if(grid.addColoredDisc(activeDisc)) {
+						if(grid.isTheWinningMove(activeDisc.getRow(), activeDisc.getColumn())) {
+							System.out.println("Congratulations " + player2.getPlayerName() + " you won!");
+							grid.playingGridPrinter();
+							break;
+						}
+						else
+							grid.playingGridPrinter();
+					}
+				}
 			}
 		}
 	}

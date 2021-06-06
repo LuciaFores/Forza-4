@@ -31,27 +31,8 @@ public class WritingJSONFile {
 		JSONObject player = new JSONObject();
 		player.put("player1", player1);
 		player.put("player2", player2);
-		// We want to write the JSON object into a text file
-		try {
-			FileWriter file = new FileWriter("SavedFiles/player.json");
-			file.write(player.toString());
-			file.flush();
-			file.close();
-		}
-		catch(IOException e){
-			e.printStackTrace();
-		}
 		
-		// We want to read the file and assign those properties to another object
-		/*Player p2 = new Player(player.get("nickname").toString().concat(" read from JSON file"));
-		p2.setPlayerColor(player.get("color").toString().concat(" read from JSON file"));
-		p2.setPlayerNumber(Integer.parseInt(player.get("number").toString()));
 		
-		System.out.println(p2.getPlayerName());
-		System.out.println(p2.getPlayerColor());
-		System.out.println(p2.getPlayerNumber());*/
-		
-		// Now we want to save a matrix into the JSON file
 		int row = 3;
 		int col = 4;
 		int[][] matrix = {
@@ -76,12 +57,34 @@ public class WritingJSONFile {
 		JSONMatrix.put("secondRow", secondRow);
 		JSONMatrix.put("thirdRow", thirdRow);
 		
-		playingMatrix.put("matrix", JSONMatrix);
+		player.put("matrix", JSONMatrix);
+		// We want to write the JSON object into a text file
+		try {
+			FileWriter file = new FileWriter("player.json");
+			file.write(player.toString());
+			file.flush();
+			file.close();
+		}
+		catch(IOException e){
+			e.printStackTrace();
+		}
+		
+		// We want to read the file and assign those properties to another object
+		/*Player p2 = new Player(player.get("nickname").toString().concat(" read from JSON file"));
+		p2.setPlayerColor(player.get("color").toString().concat(" read from JSON file"));
+		p2.setPlayerNumber(Integer.parseInt(player.get("number").toString()));
+		
+		System.out.println(p2.getPlayerName());
+		System.out.println(p2.getPlayerColor());
+		System.out.println(p2.getPlayerNumber());*/
+		
+		// Now we want to save a matrix into the JSON file
+		
 		
 		// We want to write the JSON object into a text file
 		try {
-			FileWriter file = new FileWriter("matrix.json");
-			file.write(playingMatrix.toString());
+			FileWriter file = new FileWriter("player.json");
+			file.write(player.toString());
 			file.flush();
 			file.close();
 		}
