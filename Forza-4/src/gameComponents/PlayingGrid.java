@@ -64,10 +64,15 @@ public class PlayingGrid {
 			for(int j = 0; j < COLUMNS; j++) {
 				if(integerPlayingGrid[i][j] == -1)
 					playingGrid[i][j] = null;
-				else if(integerPlayingGrid[i][j] == 0)
+				else if(integerPlayingGrid[i][j] == 0) {
 					playingGrid[i][j] = new ColoredDisc("red", i, j);
-				else if(integerPlayingGrid[i][j] == 1)
+					updateGrid();
+				}
+					
+				else if(integerPlayingGrid[i][j] == 1) {
 					playingGrid[i][j] = new ColoredDisc("yellow", i, j);
+					updateGrid();
+				}
 			}
 		}
 	}

@@ -1,6 +1,8 @@
 package Tests;
 
 import gameComponents.*;
+
+import java.util.Date;
 import java.util.Scanner;
 
 import org.json.simple.JSONObject;
@@ -9,6 +11,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 public class GameTestSaveAndLoad {
 	public static void main(String[] args) {
@@ -75,6 +78,22 @@ public class GameTestSaveAndLoad {
 						while(!grid.isItATie()) {
 							grid.playingGridPrinter();
 							if(grid.getFreeSpaces() % 2 == 0) {
+								System.out.println("Do you want to save the game? (y/n)");
+								String answer = in.next();
+								if(answer.equalsIgnoreCase("y")) {
+									gameData = player1.savingPlayers(gameData, player2);
+									savedGrid = grid.playingGridToJSONPlayingGrid();
+									gameData = grid.savingPlayingGrid(gameData, savedGrid);
+									try {
+										FileWriter savedGame = new FileWriter("SavedFiles/" + savedFile + ".json");
+										savedGame.write(gameData.toString());
+										savedGame.flush();
+										savedGame.close();
+									}
+									catch(IOException e){
+										e.printStackTrace();
+									}
+								}
 								ColoredDisc activeDisc = new ColoredDisc(player1.getPlayerColor());
 								System.out.println(player1.getPlayerName() + " in which column do you want to put your disc?");
 								int columnIndex = in.nextInt();
@@ -90,10 +109,27 @@ public class GameTestSaveAndLoad {
 								}
 							}
 							if(grid.getFreeSpaces() % 2 == 1) {
+								System.out.println("Do you want to save the game? (y/n)");
+								String answer = in.next();
+								if(answer.equalsIgnoreCase("y")) {
+									gameData = player1.savingPlayers(gameData, player2);
+									savedGrid = grid.playingGridToJSONPlayingGrid();
+									gameData = grid.savingPlayingGrid(gameData, savedGrid);
+									try {
+										FileWriter savedGame = new FileWriter("SavedFiles/" + savedFile + ".json");
+										savedGame.write(gameData.toString());
+										savedGame.flush();
+										savedGame.close();
+									}
+									catch(IOException e){
+										e.printStackTrace();
+									}
+								}
 								ColoredDisc activeDisc = new ColoredDisc(player2.getPlayerColor());
 								System.out.println(player2.getPlayerName() + " in which column do you want to put your disc?");
 								int columnIndex = in.nextInt();
 								activeDisc.setColumn(columnIndex);
+								question = true;
 								if(grid.addColoredDisc(activeDisc)) {
 									if(grid.isTheWinningMove(activeDisc.getRow(), activeDisc.getColumn())) {
 										System.out.println("Congratulations " + player2.getPlayerName() + " you won!");
@@ -112,9 +148,9 @@ public class GameTestSaveAndLoad {
 		// se non esiste la creo
 		if(game.equalsIgnoreCase("new") || newGame) {
 			System.out.println("Hello player, what's your name?");
-			String nickname1 = in.nextLine();
+			String nickname1 = in.next();
 			System.out.println("And how's your rival named?");
-			String nickname2 = in.nextLine();
+			String nickname2 = in.next();
 			Player firstCreatedPlayer = new Player(nickname1);
 			Player secondCreatedPlayer = new Player(nickname2);
 			System.out.println();
@@ -138,7 +174,7 @@ public class GameTestSaveAndLoad {
 			System.out.println(player1.getPlayerName() + " choose your color, remember only red and yellow are allowed:");
 			boolean choosing = true;
 			while(choosing) {
-				String color1 = in.nextLine();
+				String color1 = in.next();
 				if(color1.equalsIgnoreCase("red")) {
 					player1.iAmRed(player2);
 					choosing = false;
@@ -166,8 +202,9 @@ public class GameTestSaveAndLoad {
 			PlayingGrid grid = new PlayingGrid();
 			
 			// creo un salvataggio per la partita in corso
-			Timestamp data = new Timestamp(System.currentTimeMillis());
-			String fileName = player1.getPlayerName() + "_" + player2.getPlayerName() + "_" + data;
+			String fileSuffix = new SimpleDateFormat("yyyy-MM-dd-HH_mm_ss").format(new Date());
+			
+			String fileName = player1.getPlayerName() + "_" + player2.getPlayerName() + "_" + fileSuffix;
 			
 			// salvataggio dello stato iniziale della partita
 			// salvo i giocatori
@@ -189,7 +226,7 @@ public class GameTestSaveAndLoad {
 			// inizio il gioco
 			while(!grid.isItATie()) {
 				grid.playingGridPrinter();
-				if(question) {
+				/*if(question) {
 					System.out.println("Do you want to save the game? (y/n)");
 					String answer = in.next();
 					if(answer.equalsIgnoreCase("y")) {
@@ -206,8 +243,24 @@ public class GameTestSaveAndLoad {
 							e.printStackTrace();
 						}
 					}
-				}
+				}*/
 				if(grid.getFreeSpaces() % 2 == 0) {
+					System.out.println("Do you want to save the game? (y/n)");
+					String answer = in.next();
+					if(answer.equalsIgnoreCase("y")) {
+						gameData = player1.savingPlayers(gameData, player2);
+						savedGrid = grid.playingGridToJSONPlayingGrid();
+						gameData = grid.savingPlayingGrid(gameData, savedGrid);
+						try {
+							FileWriter savedGame = new FileWriter("SavedFiles/" + fileName + ".json");
+							savedGame.write(gameData.toString());
+							savedGame.flush();
+							savedGame.close();
+						}
+						catch(IOException e){
+							e.printStackTrace();
+						}
+					}
 					ColoredDisc activeDisc = new ColoredDisc(player1.getPlayerColor());
 					System.out.println(player1.getPlayerName() + " in which column do you want to put your disc?");
 					int columnIndex = in.nextInt();
@@ -223,6 +276,22 @@ public class GameTestSaveAndLoad {
 					}
 				}
 				if(grid.getFreeSpaces() % 2 == 1) {
+					System.out.println("Do you want to save the game? (y/n)");
+					String answer = in.next();
+					if(answer.equalsIgnoreCase("y")) {
+						gameData = player1.savingPlayers(gameData, player2);
+						savedGrid = grid.playingGridToJSONPlayingGrid();
+						gameData = grid.savingPlayingGrid(gameData, savedGrid);
+						try {
+							FileWriter savedGame = new FileWriter("SavedFiles/" + fileName + ".json");
+							savedGame.write(gameData.toString());
+							savedGame.flush();
+							savedGame.close();
+						}
+						catch(IOException e){
+							e.printStackTrace();
+						}
+					}
 					ColoredDisc activeDisc = new ColoredDisc(player2.getPlayerColor());
 					System.out.println(player2.getPlayerName() + " in which column do you want to put your disc?");
 					int columnIndex = in.nextInt();
