@@ -218,18 +218,18 @@ public class Player {
 	
 	
 	// salvataggio e caricamento
-	public JSONObject savingPlayers(JSONObject gameData, Player otherPlayer) {
+	public static JSONObject savingPlayers(JSONObject gameData, Player player_1, Player player_2) {
 		JSONObject savedPlayers = new JSONObject();
 		JSONObject player1 = new JSONObject();
 		JSONObject player2 = new JSONObject();
 		
-		player1.put("playerName", playerName);
-		player1.put("playerNumber", playerNumber);
-		player1.put("playerColor", playerColor);
+		player1.put("playerName", player_1.playerName);
+		player1.put("playerNumber", player_1.playerNumber);
+		player1.put("playerColor", player_1.playerColor);
 		
-		player2.put("playerName", otherPlayer.getPlayerName());
-		player2.put("playerNumber", otherPlayer.getPlayerNumber());
-		player2.put("playerColor", otherPlayer.getPlayerColor());
+		player2.put("playerName", player_2.playerName);
+		player2.put("playerNumber", player_2.playerNumber);
+		player2.put("playerColor", player_2.playerColor);
 		
 		gameData.put("player1", player1);
 		gameData.put("player2", player2);

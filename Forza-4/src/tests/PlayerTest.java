@@ -1,4 +1,4 @@
-package Tests;
+package tests;
 
 import gameComponents.Player;
 import java.util.Random;

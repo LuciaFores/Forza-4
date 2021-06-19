@@ -492,7 +492,7 @@ public class PlayingGrid {
 	
 	
 	// salvataggio e caricamento
-	public JSONObject savingPlayingGrid(JSONObject gameData, int[][] JSONPlayingGrid) {
+	public static JSONObject savingPlayingGrid(JSONObject gameData, int[][] JSONPlayingGrid) {
 		JSONObject savedGrid = new JSONObject();
 		JSONObject playingMatrix = new JSONObject();
 		JSONArray firstRow = new JSONArray();
@@ -502,7 +502,7 @@ public class PlayingGrid {
 		JSONArray fifthRow = new JSONArray();
 		JSONArray sixthRow = new JSONArray();
 		
-		for(int j = 0; j < COLUMNS; j++) {
+		for(int j = 0; j < 7; j++) {
 			firstRow.add(JSONPlayingGrid[0][j]);
 			secondRow.add(JSONPlayingGrid[1][j]);
 			thirdRow.add(JSONPlayingGrid[2][j]);
