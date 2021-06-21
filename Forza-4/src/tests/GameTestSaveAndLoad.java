@@ -75,10 +75,9 @@ public class GameTestSaveAndLoad {
 						grid.playingGridPrinter();
 						// gioco la partita
 						while(!grid.isItATie()) {
-							 //SPOSTA FUORI E AGGIUNGI COMANDO PER SALVARE
 							if(grid.getFreeSpaces() % 2 == 0) {
 								ColoredDisc activeDisc = new ColoredDisc(player1.getPlayerColor());
-								System.out.println(player1.getPlayerName() + " in which column do you want to put your disc? (press s to save)");
+								System.out.println(player1.getPlayerName() + " in which column do you want to put your disc? (press s to save, e to exit)");
 								String answer = in.next();
 								if(answer.equalsIgnoreCase("s")) {
 									gameData = Player.savingPlayers(gameData, player1, player2);
@@ -93,6 +92,10 @@ public class GameTestSaveAndLoad {
 									catch(FileNotFoundException e){
 										e.printStackTrace();
 									}
+								}
+								else if(answer.equalsIgnoreCase("e")) {
+									System.out.println("Goodbye");
+									break;
 								}
 								else if(answer.matches("[0-6]+")) {
 									int columnIndex = Integer.parseInt(answer);
@@ -110,7 +113,7 @@ public class GameTestSaveAndLoad {
 							}
 							if(grid.getFreeSpaces() % 2 == 1) {
 								ColoredDisc activeDisc = new ColoredDisc(player2.getPlayerColor());
-								System.out.println(player2.getPlayerName() + " in which column do you want to put your disc? (press s to save)");
+								System.out.println(player2.getPlayerName() + " in which column do you want to put your disc? (press s to save, e to exit)");
 								String answer = in.next();
 								if(answer.equalsIgnoreCase("s")) {
 									gameData = Player.savingPlayers(gameData, player1, player2);
@@ -124,6 +127,10 @@ public class GameTestSaveAndLoad {
 									catch(FileNotFoundException e){
 										e.printStackTrace();
 									}
+								}
+								else if(answer.equalsIgnoreCase("e")) {
+									System.out.println("Goodbye");
+									break;
 								}
 								else if(answer.matches("[0-6]+")) {
 									int columnIndex = Integer.parseInt(answer);
@@ -225,10 +232,9 @@ public class GameTestSaveAndLoad {
 			grid.playingGridPrinter();
 			// inizio il gioco
 			while(!grid.isItATie()) {
-				 //SPOSTA FUORI E AGGIUNGI COMANDO PER SALVARE
 				if(grid.getFreeSpaces() % 2 == 0) {
 					ColoredDisc activeDisc = new ColoredDisc(player1.getPlayerColor());
-					System.out.println(player1.getPlayerName() + " in which column do you want to put your disc? (press s to save)");
+					System.out.println(player1.getPlayerName() + " in which column do you want to put your disc? (press s to save, e to exit)");
 					String answer = in.next();
 					if(answer.equalsIgnoreCase("s")) {
 						gameData = Player.savingPlayers(gameData, player1, player2);
@@ -242,6 +248,10 @@ public class GameTestSaveAndLoad {
 						catch(FileNotFoundException e){
 							e.printStackTrace();
 						}
+					}
+					else if(answer.equalsIgnoreCase("e")) {
+						System.out.println("Goodbye");
+						break;
 					}
 					else if(answer.matches("[0-6]+")) {
 						int columnIndex = Integer.parseInt(answer);
@@ -259,7 +269,7 @@ public class GameTestSaveAndLoad {
 				}
 				if(grid.getFreeSpaces() % 2 == 1) {
 					ColoredDisc activeDisc = new ColoredDisc(player2.getPlayerColor());
-					System.out.println(player2.getPlayerName() + " in which column do you want to put your disc? (press s to save)");
+					System.out.println(player2.getPlayerName() + " in which column do you want to put your disc? (press s to save, e to exit)");
 					String answer = in.next();
 					if(answer.equalsIgnoreCase("s")) {
 						gameData = Player.savingPlayers(gameData, player1, player2);
@@ -273,6 +283,10 @@ public class GameTestSaveAndLoad {
 						catch(FileNotFoundException e){
 							e.printStackTrace();
 						}
+					}
+					else if(answer.equalsIgnoreCase("e")) {
+						System.out.println("Goodbye");
+						break;
 					}
 					else if(answer.matches("[0-6]+")) {
 						int columnIndex = Integer.parseInt(answer);
