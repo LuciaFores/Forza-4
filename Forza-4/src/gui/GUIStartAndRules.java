@@ -6,6 +6,7 @@ import java.awt.Font;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -21,6 +22,7 @@ import java.awt.event.MouseEvent;
 public class GUIStartAndRules extends JFrame {
 
 	private JPanel contentPane;
+	private static Player[] playersData = new Player[2];
 
 	/**
 	 * Create the frame.
@@ -60,18 +62,9 @@ public class GUIStartAndRules extends JFrame {
 		newGame.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				JFrame frame = new JFrame();
-				String nickname1 = JOptionPane.showInputDialog("Insert player name");
-				String nickname2 = JOptionPane.showInputDialog("Insert other player name");
-				Player p1 = new Player(nickname1);
-				Player p2 = new Player(nickname2);
-				p1.setPlayerNumbers(p2);
-				if(p1.getPlayerNumber() == 1) {
-					JOptionPane.showMessageDialog(frame, "The player #1 is " + p1.getPlayerName() + "\nThe player #2 is " + p2.getPlayerName());
-				}
-				else {
-					JOptionPane.showMessageDialog(frame, "The player #1 is " + p2.getPlayerName() + "\nThe player #2 is " + p1.getPlayerName());
-				}
+				PlayersCreation newPlayers = new PlayersCreation();
+				newPlayers.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				newPlayers.setVisible(true);
 				
 			}
 		});
@@ -79,6 +72,19 @@ public class GUIStartAndRules extends JFrame {
 		panel_1.add(newGame);
 		
 		
+	}
+
+	public static void setPlayersData(Player p1, Player p2) {
+		playersData[0] = p1;
+		playersData[1] = p2;
+	}
+	
+	public Player[] getPlayersData() {
+		return playersData;
+	}
+	
+	public boolean canGameStart() {
+		return true;
 	}
 
 }
