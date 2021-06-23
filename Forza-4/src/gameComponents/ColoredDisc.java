@@ -75,8 +75,8 @@ public class ColoredDisc {
 	 * @param columnIndex The value to give to the instance variable column.
 	 */
 	public void setColumn(int columnIndex) {
-		if(columnIndex < 7)
-			column = columnIndex;
+		if(columnIndex < 8)
+			column = columnIndex-1;
 		else
 			System.out.println("The column doesn't exist");
 	}

@@ -411,8 +411,7 @@ public class PlayingGrid {
 		for(int i = 0; i < ROWS; i++) {
 			for(int j = 0; j < COLUMNS; j++) {
 				if(j == 0) {
-					System.out.print(c + "  |");
-					c++;
+					System.out.print("   |");
 				}
 				if(playingGrid[i][j] == null)
 				System.out.print(" |");
@@ -426,7 +425,7 @@ public class PlayingGrid {
 			System.out.println();
 			if(i == ROWS-1) {
 				System.out.println("    - - - - - - -");
-				System.out.println("    0 1 2 3 4 5 6");
+				System.out.println("    1 2 3 4 5 6 7");
 			}
 			else
 				System.out.println("    - - - - - - -");
