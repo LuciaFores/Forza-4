@@ -26,7 +26,7 @@ public class ColoredDisc {
 	// Methods
 	
 	/**
-	 * The class constructor: it creates a new colored disc whose color is the one chose by the current player
+	 * The class constructor for a completely new ColoredDisc: it creates a new colored disc whose color is the one chose by the current player
 	 * at the beginning of the game; the position is set to (-1,-1) because when the colored disc is
 	 * created it's not in the grid.
 	 * @param activePlayerColor The color of the discs chose by a player
@@ -38,6 +38,13 @@ public class ColoredDisc {
 	}
 	
 	
+	/**
+	 * The class constructor used to load a saved ColoredDisc: the disc is given the color that had in the game when saved, and its position is 
+	 * set to the row and column that the disc had in the grid when the game has been saved
+	 * @param color The color of the disc
+	 * @param rowIndex The index of the row in which the disc is put
+	 * @param columnIndex The index of the column in which the disc is put
+	 */
 	public ColoredDisc(String color, int rowIndex, int columnIndex) {
 		discColor = color;
 		row = rowIndex;
@@ -75,10 +82,16 @@ public class ColoredDisc {
 	 * @param columnIndex The value to give to the instance variable column.
 	 */
 	public void setColumn(int columnIndex) {
-		if(columnIndex < 8)
-			column = columnIndex-1;
-		else
+		try {
+			if(columnIndex > -1 && columnIndex < 8)
+				column = columnIndex-1;
+			else
+				throw new IllegalColumnException("The column doesn't exist");
+		}
+		catch(IllegalColumnException e) {
 			System.out.println("The column doesn't exist");
+		}
+		
 	}
 	
 	
@@ -88,11 +101,15 @@ public class ColoredDisc {
 	 * @param rowIndex The value to give to the instance variable row.
 	 */
 	public void setRow(int rowIndex) {
-		if(rowIndex < 6) {
-			row = rowIndex;
+		try {
+			if(rowIndex > -1 && rowIndex < 6) {
+				row = rowIndex;
+			}
+			else
+				throw new IllegalRowException("The row doesn't exist");
 		}
-		else
-			System.out.println("the row doesn't exist");
+		catch(IllegalRowException e) {
+			System.out.println("The row doesn't exist");
+		}
 	}
-	
 }

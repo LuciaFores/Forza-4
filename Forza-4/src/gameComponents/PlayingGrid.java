@@ -1,8 +1,6 @@
 package gameComponents;
 
 import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -21,8 +19,8 @@ public class PlayingGrid {
 	 * The grid can only be a seven-columns, six-rows grid so both the number of rows and the number of columns
 	 * are final.
 	 */
-	final int ROWS = 6;
-	final int COLUMNS = 7;
+	private final int ROWS = 6;
+	private final int COLUMNS = 7;
 	
 	/* 
 	 * The playing grid will be a grid of Disc objects (each cell will contain a colored disc) so it's modeled
@@ -41,8 +39,9 @@ public class PlayingGrid {
 	// Methods
 	
 	/**
-	 * The class constructor: it creates a new playing grid for a new game; the playing grid as soon as it's
-	 * created it's just a grid of ColoredDisc objects completely empty.
+	 * The class constructor used to create a totally new playing grid.
+	 * It creates a new playing grid for a new game; as soon as it's created, the playing grid it's just a grid of ColoredDisc objects
+	 * completely empty.
 	 */
 	public PlayingGrid() {
 		playingGrid = new ColoredDisc[ROWS][COLUMNS];
@@ -54,7 +53,12 @@ public class PlayingGrid {
 		}
 	}
 	
-	
+	/**
+	 * The class constructor used to load a saved playing grid.
+	 * The constructor takes also account for the translation from the grid saved, which is an integer matrix, to the one used in the game
+	 * which is a ColoredDisc matrix
+	 * @param saveFile The name of the save file used to get the data about the game to load
+	 */
 	public PlayingGrid(String saveFile) {
 		playingGrid = new ColoredDisc[ROWS][COLUMNS];
 		freeSpaces = ROWS*COLUMNS;
@@ -98,7 +102,7 @@ public class PlayingGrid {
 	/**
 	 * This method is used to add a disc into the playing grid: the method will find the correct row
 	 * in which the disc must be insert.
-	 * The idea on which the method is build is the fact that when the disc is inserted in a column, this
+	 * The idea on which the method is built is the fact that when the disc is inserted in a column, this
 	 * will go down until it finds the end of the grid or the last occupied cell
 	 * @param disc The colored disc that the player wants to add into the playing grid
 	 * @return The boolean value added: it will be true if the player managed to insert the disc into the
@@ -107,18 +111,24 @@ public class PlayingGrid {
 	public boolean addColoredDisc(ColoredDisc disc) {
 		boolean added = false;
 		int row = 0;
-		if(playingGrid[row][disc.getColumn()] == null) {
-			for(int i = 0; i < ROWS; i++) {
-				if(playingGrid[i][disc.getColumn()] == null) {
-					row = Math.max(row, i);
-					disc.setRow(row);
+		try {
+			if(playingGrid[row][disc.getColumn()] == null) {
+				for(int i = 0; i < ROWS; i++) {
+					if(playingGrid[i][disc.getColumn()] == null) {
+						row = Math.max(row, i);
+						disc.setRow(row);
+					}
 				}
+				playingGrid[row][disc.getColumn()] = disc;
+				updateGrid();
+				added = true;
 			}
-			playingGrid[row][disc.getColumn()] = disc;
-			updateGrid();
-			added = true;
+			else 
+				throw new FullColumnException("The chosen column is full");
 		}
-		else System.out.println("Column already totally occupied");
+		catch(FullColumnException fullColumn) {
+			System.out.println("Column already totally occupied");
+		}
 		return added;
 	}
 	
@@ -314,10 +324,10 @@ public class PlayingGrid {
 	
 	
 	/**
-	 * The method is used to check if the last played move is the a move that let the player win.
+	 * The method is used to check if the last played move is the move that let the player win.
 	 * It finds, if they exist, the colored discs aligned with the one that has just been insert in all
 	 * the directions in which is possible to find four discs connected (vertical, horizontal and the two
-	 * diagonals).
+	 * diagonals) and tells the player which configuration led them to win.
 	 * @param rowIndex The index of the row in which the last insert disc has been put
 	 * @param columnIndex The index of the column in which the last insert disc has been put
 	 * @return The boolean value win: it will be true if there are four aligned discs with the same color,
@@ -330,7 +340,7 @@ public class PlayingGrid {
 		 * makes possible to have four colored discs stacked
 		 */
 		if(areFourVerticalAligned(playingGrid[rowIndex][columnIndex])) {
-			System.out.println("vertical");
+			System.out.println("Vertically aligned win");
 			return true;
 		}
 		/*
@@ -339,12 +349,12 @@ public class PlayingGrid {
 		 */
 		// Right aligned colored discs
 		if(areFourHorizontallyRightAligned(playingGrid[rowIndex][columnIndex])) {
-			System.out.println("horizontal right");
+			System.out.println("Horizontally right aligned win");
 			return true;
 		}
 		// Left aligned colored discs
 		if(areFourHorizontallyLeftAligned(playingGrid[rowIndex][columnIndex])) {
-			System.out.println("horizontal left");
+			System.out.println("Horizontally left aligned win");
 			return true;
 		}
 		/*
@@ -357,12 +367,12 @@ public class PlayingGrid {
 		boolean diagonallyLeftAlignedTop = diagonallyLeftAligned[1];
 		//Checks if there are bottom aligned disc
 		if(diagonallyLeftAlignedBottom) {
-			System.out.println("diagonal left bottom");
+			System.out.println("Diagonally left bottom aligned win");
 			return true;
 		}
 		//Checks if there are top aligned disc
 		if(diagonallyLeftAlignedTop) {
-			System.out.println("diagonal left top");
+			System.out.println("Diagonally left top aligned win");
 			return true;
 		}	
 		// Here we want to check if there are at least four elements in the right diagonal
@@ -371,10 +381,12 @@ public class PlayingGrid {
 		boolean diagonallyRightAlignedTop = diagonallyRightAligned[1];
 		//Checks if there are bottom aligned disc
 		if(diagonallyRightAlignedBottom) {
+			System.out.println("Diagonally right bottom aligned win");
 			return true;
 		}
 		//Checks if there are top aligned disc
 		if(diagonallyRightAlignedTop) {
+			System.out.println("Diagonally right top aligned win");
 			return true;
 		}
 		//If we don't have four aligned colored disc in any of the configuration above then the move played
@@ -393,17 +405,14 @@ public class PlayingGrid {
 			System.out.println("Sorry it's a tie");
 			return true;
 		}
-			
-		else
-			return false;
+		return false;
 	}
 	
 	
 	/**
 	 * This method is used to print the playing grid.
-	 * Each cell of the grid is delimited by | and -, the cells are numbered (the rows are from 0 to 5 and
-	 * the columns are from 0 to 6), and in each cell there will be a free space if a disc is not in the 
-	 * cell, a O if a red disc is in the cell and a X in a yellow disc is in the cell.
+	 * Each cell of the grid is delimited by | and -, the cells are numbered (the columns are from 1 to 7), and in each cell there
+	 * will be a free space if a disc is not in the cell, a O if a red disc is in the cell and a X in a yellow disc is in the cell.
 	 */
 	public void playingGridPrinter() {
 		System.out.println("    - - - - - - -");
@@ -433,11 +442,9 @@ public class PlayingGrid {
 		
 	}
 	
-	// traduzioni
-	
 	/**
 	 * This method is used to convert a ColoredDisc matrix into an Integer matrix so that it can be
-	 * easily saved into a JSON file for saving.
+	 * easily saved into a JSON file.
 	 * The matrix will be converted as it follows:
 	 * - cells in which there isn't a disc (they contain the value null) will be converted in -1;
 	 * - cells in which there is a red disc will be converted in 0;
@@ -459,7 +466,15 @@ public class PlayingGrid {
 		return JSONPlayingGrid;
 	}
 	
-	
+	/**
+	 * This method is used when the playing grid is loaded: into the JSON file the grid is translated into a String so when loaded
+	 * the grid must be translated into an Integer matrix so that it can be translated into a ColoredDisc matrix later.
+	 * The method takes each row of the matrix and split the content thanks to the regex [[,]] that takes as tokenizers the square parenthesis and
+	 * the comma so that only the numbers into them are saved into a String array.
+	 * The content of each array is then parsed and transformed into Integers
+	 * @param saveFile The name of the save file used to load the game
+	 * @return The Integer matrix, representing the grid, with the values saved into the file
+	 */
 	public int[][] LoadJSONPlayingGridToIntegerPlayingGrid(String saveFile){
 		JSONParser parser = new JSONParser();
 		try {
@@ -490,9 +505,15 @@ public class PlayingGrid {
 	}
 	
 	
-	// salvataggio e caricamento
+	/**
+	 * This method is used to create the JSONObject containing the grid data to be saved.
+	 * It creates a JSONArray for each row of the matrix and then it saves all of them into a JSONObject representing the matrix; it then
+	 * save the grid data into the JSONObject gameData containing all the data about the assets of the game (grid and players)
+	 * @param gameData The JSONObject containing all the data about the saved game
+	 * @param JSONPlayingGrid The Integer grid which is the translation of the ColoredDisc used in the game
+	 * @return The JSONObject gameData which contains all the data about the game which is currently being saved
+	 */
 	public static JSONObject savingPlayingGrid(JSONObject gameData, int[][] JSONPlayingGrid) {
-		JSONObject savedGrid = new JSONObject();
 		JSONObject playingMatrix = new JSONObject();
 		JSONArray firstRow = new JSONArray();
 		JSONArray secondRow = new JSONArray();
@@ -520,14 +541,5 @@ public class PlayingGrid {
 		gameData.put("playingGrid", playingMatrix);
 		
 		return gameData;
-		
-		/*try {
-			saveFile.write(savedGrid.toString());
-			saveFile.flush();
-			//saveFile.close();
-		}
-		catch(IOException e){
-			e.printStackTrace();
-		}*/
 	}
 }

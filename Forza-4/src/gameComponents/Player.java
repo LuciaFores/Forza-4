@@ -8,11 +8,6 @@ import java.util.Random;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-
-/* CREA UN METODO CHE CONTROLLA SE SI STA PROVANDO A CREARE PIU' DI DUE GIOCATORI 
- * AGGIUNGI IL PARAMETRO ISTHEACTIVEPLAYER PER IL SALVATAGGIO
- */
-
 /**
  * This class models a player of Connect Four.
  * The player will be recognized during the game thanks to a nickname that they can choose before starting the game.
@@ -40,13 +35,10 @@ public class Player {
 	 */
 	private int playerNumber;
 	
-	
-	private boolean isTheActivePlayer;
-	
 	// Methods
 	
 	/**
-	 * The class constructor: it creates a new player giving them the name that they choose as the nickname
+	 * The class constructor to create a completely new Player: it creates a new player giving them the name that they choose as the nickname
 	 * in the game.
 	 * It does not give a value for the playerColor because the player will choose it later and it does not
 	 * give a value to playerNumber because the order will be randomly choose at the beginning of the game
@@ -59,13 +51,9 @@ public class Player {
 		playerColor = "";
 	}
 	
-	
-	/*public Player(String nickname, String color, int number, boolean activePlayer) {
-		playerName = nickname;
-		playerColor = color;
-		playerNumber = number;
-		isTheActivePlayer = activePlayer;
-	}*/
+	/**
+	 * The class constructor to create a player used to load a previously saved player
+	 */
 	public Player() {
 		playerName = "";
 		playerNumber = 0;
@@ -100,11 +88,6 @@ public class Player {
 		return playerNumber;
 	}
 	
-	
-	public boolean getIsTheActivePlayer() {
-		return isTheActivePlayer;
-	}
-	
 	/**
 	 * This method is used to randomly assign an order to players in the game.
 	 * If the players try to reassign the order after it has been decided an exception occurs.
@@ -116,21 +99,25 @@ public class Player {
 		 * The first one is the part of the method that is executed when both players still not have a number
 		 * that identifies their order in the game
 		 */
-		if(otherPlayer.getPlayerNumber() == 0) {
-			Random rand = new Random();
-			if(rand.nextInt(2) == 0) {
-				playerNumber = 1;
-				otherPlayer.setPlayerNumber(2);
+		try {
+			if(otherPlayer.getPlayerNumber() == 0) {
+				Random rand = new Random();
+				if(rand.nextInt(2) == 0) {
+					playerNumber = 1;
+					otherPlayer.playerNumber = 2;
+				}
+				else{
+					playerNumber = 2;
+					otherPlayer.playerNumber = 1;
+				}
 			}
-			else{
-				playerNumber = 2;
-				otherPlayer.setPlayerNumber(1);
-			}
+			/*
+			 * The second one is executed if one player already has an order in the game: an exception occurs
+			 */
+			else 
+				throw new NumberAlreadyAssignedException("The order has already been decided");
 		}
-		/*
-		 * The second one is executed if one player already has an order in the game: an exception occurs
-		 */
-		else {
+		catch(NumberAlreadyAssignedException e) {
 			System.out.println("The order has already been decided");
 		}
 	}
@@ -141,11 +128,16 @@ public class Player {
 	 * @param assignedNumber The value to give to the instance variable playerNumber
 	 */
 	public void setPlayerNumber(int assignedNumber) {
-		if(assignedNumber == 1 || assignedNumber == 2) {
-			playerNumber = assignedNumber;
+		try {
+			if(assignedNumber == 1 || assignedNumber == 2) {
+				playerNumber = assignedNumber;
+			}
+			else
+				throw new IllegalArgumentException("The value is not valid");
 		}
-		else
-			System.out.println("The value is not valid");
+		catch(IllegalArgumentException e) {
+			System.out.println("The value is not valid, only 1 and 2 are allowed");
+		}
 	}
 	
 	
@@ -155,15 +147,21 @@ public class Player {
 	 * @param color The value to give to the instance variable playerColor
 	 */
 	public void setPlayerColor(String color) {
-		playerColor = color;
+		try {
+			if(color.equals("red") || color.equals("yellow"))
+				playerColor = color;
+			else
+				throw new IllegalArgumentException("The color is not valid");
+		}
+		catch(IllegalArgumentException e) {
+			System.out.println("The color is not valid, only red and yellow are allowed");
+		}
 	}
-	
-	
-	public void setIsTheActivePlayer(boolean activePlayer) {
-		isTheActivePlayer = activePlayer;
-	}
-	
-	
+
+	/**
+	 * This method is used to set the value of the instance variable playerName
+	 * @param nickname
+	 */
 	public void setPlayerName(String nickname) {
 		playerName = nickname;
 	}
@@ -178,17 +176,25 @@ public class Player {
 	 * @param otherPlayer The other player of the game
 	 */
 	public void iAmRed(Player otherPlayer) {
-		if(playerNumber != 1) System.out.println(playerName + ", you can't choose, you are the player number two");
-		
-		else {
-			if(otherPlayer.getPlayerColor().equals("")) {
-				this.playerColor = "red";
-				otherPlayer.setPlayerColor("yellow");
-			}
-			else if(otherPlayer.getPlayerColor().equals("red"))
-				System.out.println("There's already a player with red discs");
-			// this will turn into an exception as soon as I will understand how to make them
-			else System.out.println("Colors have been already decided");
+		try {
+			if(playerNumber != 1)
+				throw new IllegalPlayerException("You are the player number two");
+			else {
+				try {
+					if(otherPlayer.getPlayerColor().equals("")) {
+						this.playerColor = "red";
+						otherPlayer.setPlayerColor("yellow");
+					}
+					else 
+						throw new ColorAlreadyDecidedException("Colors have been already decided");
+				}
+				catch(ColorAlreadyDecidedException e) {
+					System.out.println("Colors have been already decided");
+				}
+			}	
+		}
+		catch(IllegalPlayerException e) {
+			System.out.println(playerName + ", you can't choose, you are the player #2");
 		}
 	}
 	
@@ -201,23 +207,39 @@ public class Player {
 	 * @param otherPlayer The other player of the game
 	 */
 	public void iAmYellow(Player otherPlayer) {
-		if(playerNumber != 1) System.out.println(playerName + ", you can't choose, you are the player number two");
-		
-		else {
-			if(otherPlayer.getPlayerColor().equals("")) {
-				this.playerColor = "yellow";
-				otherPlayer.setPlayerColor("red");
-			}
-			else if(otherPlayer.getPlayerColor().equals("yellow"))
-				System.out.println("There's already a player with yellow discs");
-			// this will turn into an exception as soon as I will understand how to make them
-			else System.out.println("Colors have been already decided");
+		try {
+			if(playerNumber != 1)
+				throw new IllegalPlayerException("You are the player number two");
+			else {
+				try {
+					if(otherPlayer.getPlayerColor().equals("")) {
+						this.playerColor = "yellow";
+						otherPlayer.playerColor = "red";
+					}
+					else 
+						throw new ColorAlreadyDecidedException("Colors have been already decided");
+				}
+				catch(ColorAlreadyDecidedException e) {
+					System.out.println("Colors have been already decided");
+				}
+			}	
 		}
-		
+		catch(IllegalPlayerException e) {
+			System.out.println(playerName + ", you can't choose, you are the player #2");
+		}
 	}
 	
 	
-	// salvataggio e caricamento
+	/**
+	 * This method is used to save the JSONObject containing the players data to be saved.
+	 * It creates a JSONObject for each player and it saves all the player data into that object.
+	 * It then saves the two objects representing the players into the gameData object containing all the data about
+	 * the assets of the game (grid and players)
+	 * @param gameData The JSONObject containing all the data about the saved game
+	 * @param player_1 The player #1 of the game that has to be saved
+	 * @param player_2 The player #2 of the game that has to be saved
+	 * @return The JSONObject gameData which contains all the data about the game which is currently being saved
+	 */
 	public static JSONObject savingPlayers(JSONObject gameData, Player player_1, Player player_2) {
 		JSONObject savedPlayers = new JSONObject();
 		JSONObject player1 = new JSONObject();
@@ -235,35 +257,32 @@ public class Player {
 		gameData.put("player2", player2);
 		
 		return gameData;
-		/*try {
-			saveFile.write(savedPlayers.toString());
-			saveFile.flush();
-			//saveFile.close();
-		}
-		catch(IOException e){
-			e.printStackTrace();
-		}*/
 	}
 	
-	
+	/**
+	 * This method is used to load the player #1 of the game.
+	 * The method creates a parser for the JSONObject related to the save file and assign the value to all the variables of the player
+	 * @param saveFile The name of the save file used to load the game
+	 */
 	public void loadingPlayer1(String saveFile) {
 		JSONParser parser = new JSONParser();
-		
 		try{
 			JSONObject readJSONPlayerFile = (JSONObject)parser.parse(new FileReader("SavedFiles/" + saveFile));
 			JSONObject JSONPlayer1 = (JSONObject) readJSONPlayerFile.get("player1");
 			setPlayerName(JSONPlayer1.get("playerName").toString());
 			setPlayerNumber(Integer.parseInt(JSONPlayer1.get("playerNumber").toString()));
 			setPlayerColor(JSONPlayer1.get("playerColor").toString());
-			/*Player player1 = new Player(JSONPlayer1.get("playerName").toString(), JSONPlayer1.get("playerColor").toString(),
-					Integer.parseInt(JSONPlayer1.get("playerNumber").toString()), (boolean)JSONPlayer1.get("isTheActivePlayer"));*/
 		}
 		catch(Exception e){
 			e.printStackTrace();
 		}
 	}
 		
-		
+	/**
+	 * This method is used to load the player #2 of the game.
+	 * The method creates a parser for the JSONObject related to the save file and assign the value to all the variables of the player
+	 * @param saveFile The name of the save file used to load the game
+	 */
 	public void loadingPlayer2(String saveFile) {
 		JSONParser parser = new JSONParser();
 		
@@ -273,13 +292,9 @@ public class Player {
 			setPlayerName(JSONPlayer2.get("playerName").toString());
 			setPlayerNumber(Integer.parseInt(JSONPlayer2.get("playerNumber").toString()));
 			setPlayerColor(JSONPlayer2.get("playerColor").toString());
-			/*Player player2 = new Player(JSONPlayer2.get("playerName").toString(), JSONPlayer2.get("playerColor").toString(),
-					Integer.parseInt(JSONPlayer2.get("playerNumber").toString()), (boolean)JSONPlayer2.get("isTheActivePlayer"));*/
-			
 		}
 		catch(Exception e){
 			e.printStackTrace();
-			
 		}
 	}
 }
