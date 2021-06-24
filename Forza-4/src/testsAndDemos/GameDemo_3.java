@@ -1,9 +1,8 @@
-package gameToPlay;
+package testsAndDemos;
 
 import gameComponents.*;
 
 import java.util.Date;
-import java.util.Scanner;
 
 import org.json.simple.JSONObject;
 
@@ -13,39 +12,26 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 
 /**
- * This class let the user play a game of Connect Four
+ * This class is a demo for a game in which the exception for the wrong identifier for the save file occurs
  * @author lucia
  *
  */
-public class ConnectFourGame {
+public class GameDemo_3 {
 	public static void main(String[] args) {
-		/*
-		 * These assets are used during the game:
-		 * - the scanner is used to get the answer from the players
-		 * - the boolean newGame is used to give the possibility to the player to begin a new game if they try to load a game but there aren't game to load
-		 * and to let him play a new game if they decide to do that in the loading screen
-		 * - the String savedFile is used later to create the name of the saving file for the game
-		 * - the int matrix savedGrid is used to save the playingGrid into the JSON file
-		 * - the JSONObject gameData is used later to create the object to be saved into the JSON file to save the game
-		 * - the boolean choosingTypeGame is used to let the player continue to choose if they want to load a previous game or create a new one in case they gave 
-		 * a bad answer in the first place
-		 * - the File savedDir is actually the directory in which, if present, the game previously saved are present
-		 */
-		Scanner in = new Scanner(System.in);
 		boolean newGame = false;
 		String savedFile = "";
 		int[][] savedGrid;
 		JSONObject gameData = new JSONObject();
 		boolean choosingTypeGame = true;
-		File savedDir = new File("SavedFiles");
+		File savedDir = new File("FileForTests");
 		
 		while(choosingTypeGame) {
 			System.out.println("WELCOME TO CONNECT 4");
 			System.out.println("Hello player, do you want to begin a new game or load a previous one?");
 			System.out.println("Write 'new' to begin a new game or write 'load' to load a previous one");
-			
-			// This is to get the answer from the player
-			String game = in.next();
+			System.out.println("load");
+			// This is a wrong answer to the game choice
+			String game = "load";
 			// The player can give any answer they want, so if the answer doesn't match the one that the game can recognize an exception occurs
 			try {
 				// The player decided to load a previous game
@@ -76,7 +62,8 @@ public class ConnectFourGame {
 								boolean chosen = false;
 								while(!chosen) {
 									// This is used to store player's answer, it's used a String so that the possibility in which the player answer with a letter is covered
-									String savedGameChosen = in.next();
+									String savedGameChosen = "5";
+									System.out.println("5");
 									try {
 										// The answer the player gave is transformed into an Integer
 										int savedGame = Integer.parseInt(savedGameChosen);
@@ -102,6 +89,7 @@ public class ConnectFourGame {
 											System.out.println("The answer you gave is not valid");
 											System.out.println("You can only choose one of the saved game that are present");
 											System.out.println();
+											System.exit(0);;
 										}
 									}
 									catch(NumberFormatException secondIllegalAnswer) {
@@ -117,7 +105,7 @@ public class ConnectFourGame {
 					catch(DirectoryNotFoundException missingDirectory) {
 						System.out.println("The directory of the save files doesn't exist");
 						missingDirectory.printStackTrace();
-						System.exit(0);
+						break;
 					}
 					// The program proceeds to load the chosen saved file
 					if(!newGame) {
@@ -150,7 +138,7 @@ public class ConnectFourGame {
 										 */
 										System.out.println(player1.getPlayerName() + " in which column do you want to put your disc? (press s to save, e to exit)");
 										// This is the player answer
-										String answer = in.next();
+										String answer = "";
 										try {
 											// The player decided to save the game
 											if(answer.equalsIgnoreCase("s")) {
@@ -159,7 +147,7 @@ public class ConnectFourGame {
 												savedGrid = grid.playingGridToJSONPlayingGrid();
 												gameData = PlayingGrid.savingPlayingGrid(gameData, savedGrid);
 												// Now the program tries to save it to a file
-												try(PrintWriter savedGame = new PrintWriter("SavedFiles/" + savedFile)){
+												try(PrintWriter savedGame = new PrintWriter("FileForTests/" + savedFile)){
 													savedGame.write(gameData.toString());
 													savedGame.flush();
 													savedGame.close();
@@ -172,7 +160,7 @@ public class ConnectFourGame {
 											// The player decided to exit the game
 											else if(answer.equalsIgnoreCase("e")) {
 												System.out.println("Goodbye");
-												System.exit(0);
+												break;
 											}
 											// The player decided to type the column in which they want to put the disc: the column must be a single number between 1 and 7
 											else if(answer.matches("[1-7]{1}")) {
@@ -188,7 +176,7 @@ public class ConnectFourGame {
 														System.out.println("Congratulations " + player1.getPlayerName() + " you won!");
 														// And print the grid with the winning discs
 														grid.playingGridPrinter();
-														System.exit(0);
+														break;
 													}
 													else
 														// If it isn't the winning move it just print the grid
@@ -211,14 +199,14 @@ public class ConnectFourGame {
 									if(grid.getFreeSpaces() % 2 == 1) {
 										// The program just works as described before
 										ColoredDisc activeDisc = new ColoredDisc(player2.getPlayerColor());
-										System.out.println(player2.getPlayerName() + " in which column do you want to put your disc? (press s to save, e to exit)");
-										String answer = in.next();
+										System.out.println(player2.getPlayerName() + " in which column do you want to put your disc? (press s to save, e to exit");
+										String answer = "";
 										try {
 											if(answer.equalsIgnoreCase("s")) {
 												gameData = Player.savingPlayers(gameData, player1, player2);
 												savedGrid = grid.playingGridToJSONPlayingGrid();
 												gameData = PlayingGrid.savingPlayingGrid(gameData, savedGrid);
-												try(PrintWriter savedGame = new PrintWriter("SavedFiles/" + savedFile)){
+												try(PrintWriter savedGame = new PrintWriter("FileForTests/" + savedFile)){
 													savedGame.write(gameData.toString());
 													savedGame.flush();
 													savedGame.close();
@@ -230,7 +218,7 @@ public class ConnectFourGame {
 											}
 											else if(answer.equalsIgnoreCase("e")) {
 												System.out.println("Goodbye");
-												System.exit(0);
+												break;
 											}
 											else if(answer.matches("[1-7]{1}")) {
 												int columnIndex = Integer.parseInt(answer);
@@ -239,7 +227,7 @@ public class ConnectFourGame {
 													if(grid.isTheWinningMove(activeDisc.getRow(), activeDisc.getColumn())) {
 														System.out.println("Congratulations " + player2.getPlayerName() + " you won!");
 														grid.playingGridPrinter();
-														System.exit(0);
+														break;
 													}
 													else
 														grid.playingGridPrinter();
@@ -274,9 +262,9 @@ public class ConnectFourGame {
 					
 					// Now the program proceeds with the creation of the players
 					System.out.println("Hello player, what's your name?");
-					String nickname1 = in.next();
+					String nickname1 = "";
 					System.out.println("And how's your rival named?");
-					String nickname2 = in.next();
+					String nickname2 = "";
 					// First of all two temporary players with no order are created
 					Player player = new Player(nickname1);
 					Player rival = new Player(nickname2);
@@ -306,7 +294,7 @@ public class ConnectFourGame {
 					boolean choosing = true;
 					while(choosing) {
 						try {
-							String color = in.next();
+							String color = "";
 							if(color.equalsIgnoreCase("red")) {
 								player1.iAmRed(player2);
 								choosing = false;
@@ -355,7 +343,7 @@ public class ConnectFourGame {
 					// Saving the grid
 					gameData = PlayingGrid.savingPlayingGrid(gameData, savedGrid);
 					// The program writes the saving file
-					try(PrintWriter savedGame = new PrintWriter("SavedFiles/" + fileName)){
+					try(PrintWriter savedGame = new PrintWriter("FileForTests/" + fileName)){
 						savedGame.write(gameData.toString());
 						savedGame.flush();
 						savedGame.close();
@@ -372,13 +360,13 @@ public class ConnectFourGame {
 						if(grid.getFreeSpaces() % 2 == 0) {
 							ColoredDisc activeDisc = new ColoredDisc(player1.getPlayerColor());
 							System.out.println(player1.getPlayerName() + " in which column do you want to put your disc? (press 's' to save, 'e' to exit)");
-							String answer = in.next();
+							String answer = "";
 							try {
 								if(answer.equalsIgnoreCase("s")) {
 									gameData = Player.savingPlayers(gameData, player1, player2);
 									savedGrid = grid.playingGridToJSONPlayingGrid();
 									gameData = PlayingGrid.savingPlayingGrid(gameData, savedGrid);
-									try(PrintWriter savedGame = new PrintWriter("SavedFiles/" + fileName)){
+									try(PrintWriter savedGame = new PrintWriter("FileForTests/" + fileName)){
 										savedGame.write(gameData.toString());
 										savedGame.flush();
 										savedGame.close();
@@ -390,7 +378,7 @@ public class ConnectFourGame {
 								}
 								else if(answer.equalsIgnoreCase("e")) {
 									System.out.println("Goodbye");
-									System.exit(0);
+									break;
 								}
 								else if(answer.matches("[1-7]{1}")) {
 									int columnIndex = Integer.parseInt(answer);
@@ -399,7 +387,7 @@ public class ConnectFourGame {
 										if(grid.isTheWinningMove(activeDisc.getRow(), activeDisc.getColumn())) {
 											System.out.println("Congratulations " + player1.getPlayerName() + " you won!");
 											grid.playingGridPrinter();
-											System.exit(0);
+											break;
 										}
 										else
 											grid.playingGridPrinter();
@@ -420,13 +408,13 @@ public class ConnectFourGame {
 						if(grid.getFreeSpaces() % 2 == 1) {
 							ColoredDisc activeDisc = new ColoredDisc(player2.getPlayerColor());
 							System.out.println(player2.getPlayerName() + " in which column do you want to put your disc? (press 's' to save, 'e' to exit)");
-							String answer = in.next();
+							String answer = "";
 							try {
 								if(answer.equalsIgnoreCase("s")) {
 									gameData = Player.savingPlayers(gameData, player1, player2);
 									savedGrid = grid.playingGridToJSONPlayingGrid();
 									gameData = PlayingGrid.savingPlayingGrid(gameData, savedGrid);
-									try(PrintWriter savedGame = new PrintWriter("SavedFiles/" + fileName)){
+									try(PrintWriter savedGame = new PrintWriter("FileForTests/" + fileName)){
 										savedGame.write(gameData.toString());
 										savedGame.flush();
 										savedGame.close();
@@ -438,7 +426,7 @@ public class ConnectFourGame {
 								}
 								else if(answer.equalsIgnoreCase("e")) {
 									System.out.println("Goodbye");
-									System.exit(0);
+									break;
 								}
 								else if(answer.matches("[1-7]{1}")) {
 									int columnIndex = Integer.parseInt(answer);
@@ -447,7 +435,7 @@ public class ConnectFourGame {
 										if(grid.isTheWinningMove(activeDisc.getRow(), activeDisc.getColumn())) {
 											System.out.println("Congratulations " + player2.getPlayerName() + " you won!");
 											grid.playingGridPrinter();
-											System.exit(0);
+											break;
 										}
 										else
 											grid.playingGridPrinter();
@@ -471,10 +459,14 @@ public class ConnectFourGame {
 					throw new IllegalAnswerException("The answer you gave is not valid");
 			}
 			catch(IllegalAnswerException firstIllegalAnswer) {
+				// Note that this change in the boolean variable is used only here because it must block the execution of the program
+				// in the real program there isn't this command so the player can enter a new answer to the question
+				choosingTypeGame = false;
 				System.out.println("The answer you gave is not valid");
 				System.out.println("You can only choose between creating a new game or loading a previous one");
 				System.out.println();
 			}
 		}
 	}
+
 }
