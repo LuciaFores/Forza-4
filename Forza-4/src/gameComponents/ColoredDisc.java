@@ -79,6 +79,8 @@ public class ColoredDisc {
 	/**
 	 * This method is used to set the value of the instance variable column.
 	 * The method will also checks if the column index that should be set is a legal one.
+	 * Note that the real columnIndex of the disc will be calculated as columnIndex-1 because in this way the user can see the columns of the
+	 * grid numbered from 1 to 7
 	 * @param columnIndex The value to give to the instance variable column.
 	 */
 	public void setColumn(int columnIndex) {
