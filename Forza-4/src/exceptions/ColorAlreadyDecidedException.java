@@ -1,4 +1,4 @@
-package gameComponents;
+package exceptions;
 
 /**
  * This class models an exception that occurs when the user tries to change the colors that have been already decided

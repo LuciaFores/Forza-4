@@ -6,6 +6,9 @@ import java.util.Date;
 
 import org.json.simple.JSONObject;
 
+import exceptions.DirectoryNotFoundException;
+import exceptions.IllegalAnswerException;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;

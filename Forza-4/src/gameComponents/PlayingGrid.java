@@ -6,6 +6,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import exceptions.FullColumnException;
+
 /**
  * This class models a playing grid for Connect Four.
  * The playing grid is a seven-column, six-rows grid in which colored discs can be inserted during the game.

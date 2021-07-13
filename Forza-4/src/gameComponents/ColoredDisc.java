@@ -1,5 +1,8 @@
 package gameComponents;
 
+import exceptions.IllegalColumnException;
+import exceptions.IllegalRowException;
+
 /**
  * This class models a colored disc for Connect Four.
  * The colored disc has different colors for each player.

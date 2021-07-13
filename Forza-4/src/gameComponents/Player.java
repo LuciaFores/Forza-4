@@ -8,6 +8,10 @@ import java.util.Random;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import exceptions.ColorAlreadyDecidedException;
+import exceptions.IllegalPlayerException;
+import exceptions.NumberAlreadyAssignedException;
+
 /**
  * This class models a player of Connect Four.
  * The player will be recognized during the game thanks to a nickname that they can choose before starting the game.

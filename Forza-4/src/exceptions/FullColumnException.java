@@ -1,4 +1,4 @@
-package gameComponents;
+package exceptions;
 
 /**
  * This class models an exception that occurs when a user tries to put a disc into an already full column

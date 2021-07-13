@@ -1,4 +1,4 @@
-package gameComponents;
+package exceptions;
 
 /**
  * This class models an exception that occurs when a player that isn't the first one tries to decide the color in the game
