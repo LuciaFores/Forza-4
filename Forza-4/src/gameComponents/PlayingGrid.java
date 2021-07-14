@@ -18,7 +18,7 @@ public class PlayingGrid {
 	// Instance Variables
 	
 	/* 
-	 * The grid can only be a seven-columns, six-rows grid so both the number of rows and the number of columns
+	 * The grid can only be a seven-columns, six-rows grid so both the numbers of rows and the number of columns
 	 * are final.
 	 */
 	private final int ROWS = 6;
@@ -32,7 +32,7 @@ public class PlayingGrid {
 	
 	/* 
 	 * During a game a playing grid will have some cells occupied while others are still free; due to the necessity
-	 * of checking if the grid still has at least a free space (if it's all occupied it's game over) this
+	 * of checking if the grid still has at least a free space (if it's all occupied it's a tie) this
 	 * variable takes account of the free spaces still available in the playing grid
 	 */
 	private int freeSpaces;
@@ -220,8 +220,7 @@ public class PlayingGrid {
 	 * been inserted exists and have the same color as the one passed as an argument: if it finds them it
 	 * will set the boolean value aligned as true.
 	 * @param disc The last inserted colored disc.
-	 * @return The boolean value aligned that will be true if there are four discs aligned with the same
-	 * color, false otherwise.
+	 * @return The boolean array aligned that will have true if there are four discs aligned, false otherwise.
 	 */
 	public boolean[] areFourDiagonallyLeftAligned(ColoredDisc disc){
 		boolean[] aligned = new boolean[2];
@@ -276,8 +275,7 @@ public class PlayingGrid {
 	 * been inserted exists and have the same color as the one passed as an argument: if it finds them it
 	 * will set the boolean value aligned as true.
 	 * @param disc The last inserted colored disc.
-	 * @return The boolean value aligned that will be true if there are four discs aligned with the same
-	 * color, false otherwise.
+	 * @return The boolean array aligned that will have true if there are four discs aligned, false otherwise.
 	 */
 	public boolean[] areFourDiagonallyRightAligned(ColoredDisc disc){
 		boolean[] aligned = new boolean[2];
@@ -327,8 +325,7 @@ public class PlayingGrid {
 	
 	/**
 	 * The method is used to check if the last played move is the move that let the player win.
-	 * It finds, if they exist, the colored discs aligned with the one that has just been insert in all
-	 * the directions in which is possible to find four discs connected (vertical, horizontal and the two
+	 * It finds, if it exists, if there are four discs aligned in one of the possible configurations (vertical, horizontal and the two
 	 * diagonals) and tells the player which configuration led them to win.
 	 * @param rowIndex The index of the row in which the last insert disc has been put
 	 * @param columnIndex The index of the column in which the last insert disc has been put
@@ -418,7 +415,6 @@ public class PlayingGrid {
 	 */
 	public void playingGridPrinter() {
 		System.out.println("    - - - - - - -");
-		int c = 0;
 		for(int i = 0; i < ROWS; i++) {
 			for(int j = 0; j < COLUMNS; j++) {
 				if(j == 0) {

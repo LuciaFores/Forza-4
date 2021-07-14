@@ -6,10 +6,17 @@ package exceptions;
  *
  */
 public class IllegalPlayerException extends IllegalArgumentException{
+	/**
+	 * The constructor without parameters: it creates an exception without message for the user
+	 */
 	public IllegalPlayerException() {
 		
 	}
 	
+	/**
+	 * The constructor with parameters: it creates an exception with a message for the user
+	 * @param message The message to be shown to the user
+	 */
 	public IllegalPlayerException(String message) {
 		super(message);
 	}

@@ -1,8 +1,6 @@
 package gameComponents;
 
 import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Random;
 
 import org.json.simple.JSONObject;
@@ -172,7 +170,7 @@ public class Player {
 	
 	
 	/**
-	 * This method let the player choose the color red as the color for it's colored discs.
+	 * This method let the player choose the color red as the color for their colored discs.
 	 * The method checks if the player that called the method is the first one in the game, it checks if the 
 	 * players doesn't have already colors assigned and checks if the color hasn't already be taken by the other
 	 * player.
@@ -203,7 +201,7 @@ public class Player {
 	}
 	
 	/**
-	 * This method let the player choose the color red as the color for it's colored discs.
+	 * This method let the player choose the color red as the color for their colored discs.
 	 * The method checks if the player that called the method is the first one in the game, it checks if the 
 	 * players doesn't have already colors assigned and checks if the color hasn't already be taken by the other
 	 * player.
@@ -245,7 +243,6 @@ public class Player {
 	 * @return The JSONObject gameData which contains all the data about the game which is currently being saved
 	 */
 	public static JSONObject savingPlayers(JSONObject gameData, Player player_1, Player player_2) {
-		JSONObject savedPlayers = new JSONObject();
 		JSONObject player1 = new JSONObject();
 		JSONObject player2 = new JSONObject();
 		
